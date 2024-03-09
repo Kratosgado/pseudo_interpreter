@@ -1,4 +1,3 @@
-pub mod  tokens;
+pub mod  lexer;
 pub mod parser;
-pub mod operator;
-pub mod expressions;
+pub mod evaluator;
