@@ -31,7 +31,10 @@ impl<'a> Lexer<'a> {
                 'a'..='z' | 'A'..='Z' => tokens.push(self.identifier()),
                 '+' | '-' | '*' | '/' | '(' | ')' => tokens.push(self.operator()),
                 '=' => tokens.push(self.equals()),
-                '\n' => tokens.push(Token::EOL),
+                '\n' | ';' => {
+                    tokens.push(Token::EOL);
+                    self.next_char();
+                }
                 ' ' | '\t' | '\r' => self.next_char(),
                 '"' => tokens.push(self.string()),
                 _ => panic!("Invalid character: {}", ch),
@@ -53,6 +56,7 @@ impl<'a> Lexer<'a> {
     /// catch strings
     fn string(&mut self) -> Token {
         let mut string = String::new();
+        self.next_char();
         while let Some(ch) = self.current_char {
             if ch == '"' {
                 self.next_char();

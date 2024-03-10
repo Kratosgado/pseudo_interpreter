@@ -114,6 +114,10 @@ impl Parser {
                     panic!("Expected closing parenthesis");
                 }
             }
+            Some(Token::Str(value)) => {
+                self.next_token();
+                Expr::Str(value)
+            }
             _ => todo!(
                 "Implement parsing of strings and variables, {:?}",
                 self.current_token

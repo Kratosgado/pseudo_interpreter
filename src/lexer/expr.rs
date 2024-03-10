@@ -4,4 +4,5 @@ use super::operator::Operator;
 pub enum Expr {
     Number(i64),
     BinOp(Box<Expr>, Operator, Box<Expr>),
+    Str(String),
 }

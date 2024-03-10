@@ -1,6 +1,6 @@
 use pseudo_interpreter::evaluator::evaluator::Evaluator;
 use pseudo_interpreter::lexer::lexer::Lexer;
-use pseudo_interpreter::parser::arithmetic::Parser;
+use pseudo_interpreter::parser::parser::Parser;
 
 use  std::fs;
 

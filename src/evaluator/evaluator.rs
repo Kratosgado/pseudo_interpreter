@@ -1,3 +1,6 @@
+use std::panic;
+
+use super::eval_result::EvalResult;
 use crate::lexer::expr::Expr;
 use crate::lexer::operator::Operator;
 use crate::lexer::statement::Statement;
@@ -45,19 +48,27 @@ impl Evaluator {
         }
     }
 
-    fn evaluate_expr(&self, expr: &Expr) -> i64 {
+    fn evaluate_expr(&self, expr: &Expr) -> EvalResult {
         match expr {
-            Expr::Number(num) => *num,
+            Expr::Number(num) => EvalResult::Number(*num),
             Expr::BinOp(left, op, right) => {
-                let left_val = self.evaluate_expr(left);
-                let right_val = self.evaluate_expr(right);
-                match op {
+                let left_val = match self.evaluate_expr(left) {
+                    EvalResult::Number(val) => val,
+                    _ => panic!("Expected number"),
+                };
+                let right_val = match self.evaluate_expr(right) {
+                    EvalResult::Number(val) => val,
+                    _ => panic!("Expected a number"),
+                };
+                let result = match op {
                     Operator::Add => left_val + right_val,
                     Operator::Subtract => left_val - right_val,
                     Operator::Multiply => left_val * right_val,
                     Operator::Divide => left_val / right_val,
-                }
+                };
+                EvalResult::Number(result)
             }
+            Expr::Str(value) => EvalResult::Str(value.clone()),
         }
     }
 }
