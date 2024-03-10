@@ -1,21 +1,23 @@
-comparisons
-    Equals,        
-    LessThan,
-    GreaterThan,
-    LessThanEqual,
-    GreaterThanEqual,
-    NotEqual,
+known bugs:
+    
 
-
-control
-    If,
-    Else,
-    While,
-    For,
-    Function,
-    Return,
-    Continue,
-    Break,
-
-functions
-classes
+to be implemented:
+    disallow naming variables with keywords
+    comparisons:
+        Equals,        
+        LessThan,
+        GreaterThan,
+        LessThanEqual,
+        GreaterThanEqual,
+        NotEqual,
+    control structures:
+        If,
+        Else,
+        While,
+        For,
+        Function,
+        Return,
+        Continue,
+        Break,
+    functions:
+    classes:

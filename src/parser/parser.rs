@@ -72,12 +72,12 @@ impl Parser {
                 let var = var.clone();
                 self.next_token();
                 Statement::Print(Expr::Variable(var))
-            },
+            }
             _ => {
                 self.next_token();
                 let expr = self.parse_expr();
                 Statement::Print(expr)
-            },
+            }
         }
     }
 
@@ -142,6 +142,10 @@ impl Parser {
             Some(Token::Str(value)) => {
                 self.next_token();
                 Expr::Str(value)
+            }
+            Some(Token::Ident(var)) => {
+                self.next_token();
+                Expr::Variable(var)
             }
             _ => todo!(
                 "Implement parsing of strings and variables, {:?}",
