@@ -34,26 +34,51 @@ impl Parser {
 
         while let Some(token) = &self.current_token {
             match token {
-                Token::Print => {
-                    self.next_token();
-                    let expr = self.parse_expr();
-                    statements.push(Statement::Print(expr));
-                    if matches!(self.current_token, Some(Token::EOL)) {
-                        self.next_token();
-                    }
-                }
+                Token::Print => statements.push(self.parse_print()),
+                Token::Ident(_) => statements.push(self.parse_assignment()),
+                Token::EOL => self.next_token(),
                 Token::EOF => break,
                 _ => {
                     let expr = self.parse_expr();
                     println!("{:?}", expr);
                     statements.push(Statement::Expr(expr));
-                    if matches!(self.current_token, Some(Token::EOL)) {
-                        self.next_token();
-                    }
                 }
             }
         }
         statements
+    }
+
+    fn parse_assignment(&mut self) -> Statement {
+        match &self.current_token {
+            Some(Token::Ident(var)) => {
+                let var = var.clone();
+                self.next_token();
+                if let Some(Token::Assign) = self.current_token {
+                    self.next_token();
+                    let expr = self.parse_expr();
+                    Statement::Assignment(var, expr)
+                } else {
+                    panic!("Expected assignment operator");
+                }
+            }
+            _ => todo!("Implement for other types of assignments"),
+        }
+    }
+
+    fn parse_print(&mut self) -> Statement {
+        self.next_token();
+        match &self.current_token {
+            Some(Token::Ident(var)) => {
+                let var = var.clone();
+                self.next_token();
+                Statement::Print(Expr::Variable(var))
+            },
+            _ => {
+                self.next_token();
+                let expr = self.parse_expr();
+                Statement::Print(expr)
+            },
+        }
     }
 
     fn parse_expr(&mut self) -> Expr {

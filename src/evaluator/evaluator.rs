@@ -1,14 +1,15 @@
-use std::panic;
-
 use super::eval_result::EvalResult;
 use crate::lexer::expr::Expr;
 use crate::lexer::operator::Operator;
 use crate::lexer::statement::Statement;
 
+use std::collections::HashMap;
+
 pub struct Evaluator {
     statements: Vec<Statement>,
     current_statement: Option<Statement>,
     position: usize,
+    symbol_table: HashMap<String, EvalResult>,
 }
 
 impl Evaluator {
@@ -17,6 +18,7 @@ impl Evaluator {
             statements,
             current_statement: None,
             position: 0,
+            symbol_table: HashMap::new(),
         };
         evaluator.next_statement();
         evaluator
@@ -35,19 +37,32 @@ impl Evaluator {
         while let Some(statement) = &self.current_statement {
             match statement {
                 Statement::Expr(expr) => {
-                    let result = self.evaluate_expr(expr);
+                    self.evaluate_expr(expr);
                     self.next_statement();
                 }
                 Statement::Print(expr) => {
-                    let result = self.evaluate_expr(expr);
-                    println!("{}", result);
+                    let value = self.evaluate_expr(expr);
+                    println!("{}", value);
                     self.next_statement();
                 }
-                Statement::Assignment(_, _) => todo!(),
+                Statement::Assignment(var, expr) => {
+                    let value = self.evaluate_expr(expr);
+                    self.symbol_table.insert(var.clone(), value.clone());
+                    self.next_statement();
+                }
             }
         }
     }
 
+    /// Evaluates an expression and returns the result.
+    ///
+    /// # Panics
+    ///
+    /// Panics if performing an operation on a non-number.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if .
     fn evaluate_expr(&self, expr: &Expr) -> EvalResult {
         match expr {
             Expr::Number(num) => EvalResult::Number(*num),
@@ -69,6 +84,13 @@ impl Evaluator {
                 EvalResult::Number(result)
             }
             Expr::Str(value) => EvalResult::Str(value.clone()),
+            Expr::Variable(var) => {
+                if let Some(value) = self.symbol_table.get(var) {
+                    value.clone()
+                } else {
+                    panic!("undefined variable: {}", var)
+                }
+            }
         }
     }
 }

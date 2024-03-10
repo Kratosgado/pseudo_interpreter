@@ -4,6 +4,9 @@ pub enum Token {
     Number(i64),
     Str(String),
     Bool(bool),
+
+    // variable
+    Variable,
     
     // arithmen tokens
     Minus,

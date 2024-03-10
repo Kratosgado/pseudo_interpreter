@@ -124,7 +124,7 @@ impl<'a> Lexer<'a> {
             }
         }
         match id.to_lowercase().as_str() {
-            "print" => Token::Print,
+            "print" | "output" | "display" => Token::Print,
             _ => Token::Ident(id),
         }
     }
