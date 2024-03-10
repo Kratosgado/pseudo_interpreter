@@ -20,12 +20,20 @@ pub enum Token {
     Let,
     Ident(String), // identifier
     Assign,        // assignment
-    Equals,        // equality
     EOL,           // end of line
     EOF,           // end of file
 
     // keywords
     Print,
+
+    // comparisons
+    Equals,        // equality
+    LessThan,
+    GreaterThan,
+    LessThanEqual,
+    GreaterThanEqual,
+    NotEqual,
+
 
     // control tokens
     If,

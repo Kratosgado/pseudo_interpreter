@@ -1,0 +1,21 @@
+comparisons
+    Equals,        
+    LessThan,
+    GreaterThan,
+    LessThanEqual,
+    GreaterThanEqual,
+    NotEqual,
+
+
+control
+    If,
+    Else,
+    While,
+    For,
+    Function,
+    Return,
+    Continue,
+    Break,
+
+functions
+classes
