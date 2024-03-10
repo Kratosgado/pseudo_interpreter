@@ -80,6 +80,7 @@ impl Evaluator {
                     Operator::Subtract => left_val - right_val,
                     Operator::Multiply => left_val * right_val,
                     Operator::Divide => left_val / right_val,
+                    Operator::Modulo => left_val % right_val,
                 };
                 EvalResult::Number(result)
             }

@@ -7,14 +7,15 @@ pub enum Token {
 
     // variable
     Variable,
-    
+
     // arithmen tokens
+    Plus,
     Minus,
     Multiply,
     Divide,
+    Modulo,
     LParen,
     RParen,
-    Plus,
 
     // statement tokens
     Let,
@@ -27,13 +28,12 @@ pub enum Token {
     Print,
 
     // comparisons
-    Equals,        // equality
+    Equals, // equality
     LessThan,
     GreaterThan,
     LessThanEqual,
     GreaterThanEqual,
     NotEqual,
-
 
     // control tokens
     If,

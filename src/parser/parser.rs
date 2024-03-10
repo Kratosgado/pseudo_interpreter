@@ -107,9 +107,11 @@ impl Parser {
 
         while let Some(token) = &self.current_token {
             match token {
-                Token::Multiply | Token::Divide => {
+                Token::Multiply | Token::Divide | Token::Modulo => {
                     let op = if matches!(token, Token::Multiply) {
                         Operator::Multiply
+                    } else if matches!(token, Token::Modulo) {
+                        Operator::Modulo
                     } else {
                         Operator::Divide
                     };

@@ -29,7 +29,7 @@ impl<'a> Lexer<'a> {
             match ch {
                 '0'..='9' => tokens.push(self.number()),
                 'a'..='z' | 'A'..='Z' => tokens.push(self.identifier()),
-                '+' | '-' | '*' | '/' | '(' | ')' => tokens.push(self.operator()),
+                '+' | '-' | '*' | '/' | '%' | '(' | ')' => tokens.push(self.operator()),
                 '=' => tokens.push(self.equals()),
                 '\n' | ';' => {
                     tokens.push(Token::EOL);
@@ -97,6 +97,10 @@ impl<'a> Lexer<'a> {
             Some('/') => {
                 self.next_char();
                 Token::Divide
+            }
+            Some('%') => {
+                self.next_char();
+                Token::Modulo
             }
             Some('(') => {
                 self.next_char();
