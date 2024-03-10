@@ -2,13 +2,13 @@ use std::str::Chars;
 
 use super::token::Token;
 
-pub struct Lexer<'T> {
-    chars: Chars<'T>,
+pub struct Lexer<'a> {
+    chars: Chars<'a>,
     current_char: Option<char>,
 }
 
-impl<'T> Lexer<'T> {
-    pub fn new(input: &'T str) -> Self {
+impl<'a> Lexer<'a> {
+    pub fn new(input: &'a str) -> Self {
         let mut lexer = Lexer {
             chars: input.chars(),
             current_char: None,
@@ -21,46 +21,26 @@ impl<'T> Lexer<'T> {
         self.current_char = self.chars.next();
     }
 
+    /// tokenize inputs
     pub fn tokenize(&mut self) -> Vec<Token> {
         let mut tokens = Vec::new();
 
         while let Some(ch) = self.current_char {
             match ch {
                 '0'..='9' => tokens.push(self.number()),
-                
-                '+' => {
-                    tokens.push(Token::Plus);
-                    self.next_char();
-                }
-                '-' => {
-                    tokens.push(Token::Minus);
-                    self.next_char();
-                }
-                '*' => {
-                    tokens.push(Token::Multiply);
-                    self.next_char();
-                }
-                '/' => {
-                    tokens.push(Token::Divide);
-                    self.next_char();
-                }
-                '(' => {
-                    tokens.push(Token::LParen);
-                    self.next_char();
-                }
-                ')' => {
-                    tokens.push(Token::RParen);
-                    self.next_char();
-                }
-                ' ' | '\t' | '\n' | '\r' => {
-                    self.next_char();
-                }
+                'a'..='z' | 'A'..='Z' => tokens.push(self.identifier()),
+                '+' | '-' | '*' | '/' | '(' | ')' => tokens.push(self.operator()),
+                '=' => tokens.push(self.equals()),
+                '\n' => tokens.push(Token::EOL),
+                ' ' | '\t' | '\r' => self.next_char(),
+                '"' => tokens.push(self.string()),
                 _ => panic!("Invalid character: {}", ch),
             }
         }
         tokens
     }
 
+    /// catch numbers
     fn number(&mut self) -> Token {
         let mut number = 0;
         while let Some('0'..='9') = self.current_char {
@@ -68,5 +48,80 @@ impl<'T> Lexer<'T> {
             self.next_char();
         }
         Token::Number(number)
+    }
+
+    /// catch strings
+    fn string(&mut self) -> Token {
+        let mut string = String::new();
+        while let Some(ch) = self.current_char {
+            if ch == '"' {
+                self.next_char();
+                break;
+            }
+            string.push(ch);
+            self.next_char();
+        }
+        Token::Str(string)
+    }
+
+    /// catch = and ==
+    fn equals(&mut self) -> Token {
+        self.next_char();
+        if let Some('=') = self.current_char {
+            self.next_char();
+            Token::Equals
+        } else {
+            Token::Assign
+        }
+    }
+
+    /// catch operators
+    fn operator(&mut self) -> Token {
+        match self.current_char {
+            Some('+') => {
+                self.next_char();
+                Token::Plus
+            }
+            Some('-') => {
+                self.next_char();
+                Token::Minus
+            }
+            Some('*') => {
+                self.next_char();
+                Token::Multiply
+            }
+            Some('/') => {
+                self.next_char();
+                Token::Divide
+            }
+            Some('(') => {
+                self.next_char();
+                Token::LParen
+            }
+            Some(')') => {
+                self.next_char();
+                Token::RParen
+            }
+            _ => panic!("Invalid operator"),
+        }
+    }
+
+    // catch variables
+    fn identifier(&mut self) -> Token {
+        let mut id = String::new();
+
+        while let Some(ch) = self.current_char {
+            match ch {
+                'a'..='z' | 'A'..='Z' | '0'..='9' | '_' => {
+                    id.push(ch);
+                    self.next_char();
+                }
+                _ => break,
+            }
+        }
+        match id.to_lowercase().as_str() {
+            "print" => Token::Print,
+            _ => Token::Ident(id),
+        }
     }
 }
