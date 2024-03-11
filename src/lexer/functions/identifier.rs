@@ -1,5 +1,5 @@
-use crate::lexer::lexer::Lexer;
 use super::super::Token;
+use crate::lexer::lexer::Lexer;
 
 // catch variables
 pub fn identifier(lexer: &mut Lexer) -> Token {
@@ -23,12 +23,13 @@ pub fn identifier(lexer: &mut Lexer) -> Token {
         "and" => Token::And,
         "or" => Token::Or,
         "not" => Token::Not,
-        
+
         // decision making
         "if" => Token::If,
-        "then" => Token::Then, 
+        "then" => Token::Then,
+        "endif" => Token::EndIf,
         "else" => Token::Else,
-        "do" => Token::Do, 
+        "do" => Token::Do,
         "while" => Token::While,
         "for" => Token::For,
         "function" => Token::Function,
@@ -36,9 +37,6 @@ pub fn identifier(lexer: &mut Lexer) -> Token {
         "continue" => Token::Continue,
         "break" => Token::Break,
 
-        
-
         _ => Token::Ident(id),
     }
-    
 }

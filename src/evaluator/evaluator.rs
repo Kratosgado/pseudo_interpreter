@@ -1,10 +1,10 @@
-use super::{eval_result::EvalResult, Expression, Statement};
+use super::{eval_result::EvalResult, EvalIf, Expression, Statement};
 
 use std::collections::HashMap;
 
 pub struct Evaluator {
     statements: Vec<Statement>,
-    current_statement: Option<Statement>,
+    pub current_statement: Option<Statement>,
     position: usize,
     pub symbol_table: HashMap<String, EvalResult>,
 }
@@ -31,22 +31,23 @@ impl Evaluator {
     }
 
     pub fn evaluate(&mut self) {
-        while let Some(statement) = &self.current_statement {
+        while let Some(statement) = self.current_statement.take() {
             match statement {
                 Statement::Expr(expr) => {
-                    self.evaluate_expr(expr);
+                    self.evaluate_expr(&expr);
                     self.next_statement();
                 }
                 Statement::Print(expr) => {
-                    let value = self.evaluate_expr(expr);
+                    let value = self.evaluate_expr(&expr);
                     println!("{}", value);
                     self.next_statement();
                 }
                 Statement::Assignment(var, expr) => {
-                    let value = self.evaluate_expr(expr);
+                    let value = self.evaluate_expr(&expr);
                     self.symbol_table.insert(var.clone(), value.clone());
                     self.next_statement();
                 }
+                Statement::If(_, _, _) => self.eval_if(&statement),
             }
         }
     }

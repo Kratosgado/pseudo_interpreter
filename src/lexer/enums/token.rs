@@ -41,9 +41,11 @@ pub enum Token {
     // control tokens
     If,
     Else,
+    EndIf,
     Then, Do,
     While,
     For,
+    EndFor,
     Function,
     Return,
     Continue,

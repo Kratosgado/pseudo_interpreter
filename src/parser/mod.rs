@@ -11,6 +11,7 @@ mod functions {
      pub mod factor_term;
      pub mod comparison;
      pub mod print_expr;
+     pub mod parse_if;
 }
 
 pub use functions::{
@@ -18,4 +19,5 @@ pub use functions::{
      factor_term::FactorTerm,
      comparison::Comparison,
      print_expr::PrintExpr,
+     parse_if::ParseIf,
 };
