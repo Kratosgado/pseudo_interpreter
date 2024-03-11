@@ -28,16 +28,20 @@ pub enum Token {
     Print,
 
     // comparisons
-    Equals, // equality
+    Equal, // equality
     LessThan,
     GreaterThan,
     LessThanEqual,
     GreaterThanEqual,
     NotEqual,
+    Not,
+    And,
+    Or,
 
     // control tokens
     If,
     Else,
+    Then, Do,
     While,
     For,
     Function,

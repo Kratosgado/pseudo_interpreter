@@ -108,10 +108,8 @@ impl Parser {
 
         while let Some(token) = &self.current_token {
             match token {
-                Token::Equals => {
-                    self.next_token();
-                    let right = self.parse_expr();
-                    left = Expr::Equals(Box::new(left), Box::new(right));
+                Token::Equal | Token::LessThan | Token::GreaterThan | Token::LessThanEqual | Token::GreaterThanEqual | Token::NotEqual => {
+                    left = self.parse_comparison(left);
                 }
                 Token::Multiply | Token::Divide | Token::Modulo => {
                     let op = if matches!(token, Token::Multiply) {
@@ -159,9 +157,27 @@ impl Parser {
                 self.next_token();
                 Expr::Boolean(value)
             }
-
             Some(token) => todo!("Implement parsing of {:?}", token),
             None => panic!("Expected a token"),
+        }
+    }
+
+    fn parse_comparison(&mut self, left: Expr) -> Expr {
+        if let Some(token) = &self.current_token {
+            let op = match token {
+                Token::Equal => Operator::Equal,
+                Token::LessThan => Operator::LessThan,
+                Token::GreaterThan => Operator::GreaterThan,
+                Token::LessThanEqual => Operator::LessThanEqual,
+                Token::GreaterThanEqual => Operator::GreaterThanEqual,
+                Token::NotEqual => Operator::NotEqual,
+                _ => panic!("Expected comparison operator"),
+            };
+            self.next_token();
+            let right = self.parse_expr();
+            Expr::Comparison(Box::new(left), op, Box::new(right))
+        } else {
+            left
         }
     }
 }

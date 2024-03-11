@@ -76,16 +76,7 @@ impl Evaluator {
             }
             Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
             Expr::Boolean(val) => EvalResult::Boolean(*val),
-            Expr::Equals(left, right) => {
-                let left_val = self.evaluate_expr(left);
-                let right_val = self.evaluate_expr(right);
-                EvalResult::Boolean(left_val == right_val)
-            }
-            Expr::LessThan(_, _) => todo!(),
-            Expr::GreaterThan(_, _) => todo!(),
-            Expr::LessThanEqual(_, _) => todo!(),
-            Expr::GreaterThanEqual(_, _) => todo!(),
-            Expr::NotEqual(_, _) => todo!(),
+            Expr::Comparison(left, op, right  ) => self.evaluate_comparison(left, op, right),
         }
     }
 
@@ -104,7 +95,29 @@ impl Evaluator {
             Operator::Multiply => left_val * right_val,
             Operator::Divide => left_val / right_val,
             Operator::Modulo => left_val % right_val,
+            _ => panic!("Invalid arithmetic operator"),
+
         };
         EvalResult::Number(result)
+    }
+    fn evaluate_comparison(&self, left: &Expr, op: &Operator, right: &Expr) -> EvalResult {
+        let left_val = match self.evaluate_expr(left) {
+            EvalResult::Number(val) => val,
+            _ => panic!("Expected number"),
+        };
+        let right_val = match self.evaluate_expr(right) {
+            EvalResult::Number(val) => val,
+            _ => panic!("Expected a number"),
+        };
+        let result = match op {
+            Operator::Equal => left_val == right_val,
+            Operator::LessThan => left_val < right_val,
+            Operator::GreaterThan => left_val > right_val,
+            Operator::LessThanEqual => left_val <= right_val,
+            Operator::GreaterThanEqual => left_val >= right_val,
+            Operator::NotEqual => left_val != right_val,
+            _ => panic!("Invalid comparison operator"),
+        };
+        EvalResult::Boolean(result)
     }
 }

@@ -28,9 +28,9 @@ impl<'a> Lexer<'a> {
         while let Some(ch) = self.current_char {
             match ch {
                 '0'..='9' => tokens.push(self.number()),
-                'a'..='z' | 'A'..='Z' => tokens.push(self.identifier()),
+                'a'..='z' | 'A'..='Z' | '_' => tokens.push(self.identifier()),
                 '+' | '-' | '*' | '/' | '%' | '(' | ')' => tokens.push(self.operator()),
-                '=' => tokens.push(self.equals()),
+                '<' | '>' | '!' | '=' | '&' | '|' => tokens.push(self.comparison()),
                 '\n' | ';' => {
                     tokens.push(Token::EOL);
                     self.next_char();
@@ -68,14 +68,67 @@ impl<'a> Lexer<'a> {
         Token::Str(string)
     }
 
-    /// catch = and ==
-    fn equals(&mut self) -> Token {
-        self.next_char();
-        if let Some('=') = self.current_char {
-            self.next_char();
-            Token::Equals
-        } else {
-            Token::Assign
+    /// catch comparisons
+    /// catch =, ==, <, >, <=, >=, !=
+    /// catch &&, ||
+    /// catch !
+    fn comparison(&mut self) -> Token {
+        match self.current_char {
+            Some('<') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::LessThanEqual
+                } else {
+                    Token::LessThan
+                }
+            }
+            Some('>') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::GreaterThanEqual
+                } else {
+                    Token::GreaterThan
+                }
+            }
+            Some('!') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::NotEqual
+                } else {
+                    Token::Not
+                }
+            }
+            Some('=') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::Equal
+                } else {
+                    Token::Assign
+                }
+            }
+            Some('&') => {
+                self.next_char();
+                if let Some('&') = self.current_char {
+                    self.next_char();
+                    Token::And
+                } else {
+                    panic!("Invalid character: &");
+                }
+            }
+            Some('|') => {
+                self.next_char();
+                if let Some('|') = self.current_char {
+                    self.next_char();
+                    Token::Or
+                } else {
+                    panic!("Invalid character: |");
+                }
+            }
+            _ => panic!("Invalid character"),
         }
     }
 
@@ -131,6 +184,26 @@ impl<'a> Lexer<'a> {
             "print" | "output" | "display" => Token::Print,
             "true" => Token::Boolean(true),
             "false" => Token::Boolean(false),
+
+            // comparison
+            "and" => Token::And,
+            "or" => Token::Or,
+            "not" => Token::Not,
+            
+            // decision making
+            "if" => Token::If,
+            "then" => Token::Then, // "then" is not a keyword, but it is used in the parser
+            "else" => Token::Else,
+            "do" => Token::Do, // "do" is not a keyword, but it is used in the parser
+            "while" => Token::While,
+            "for" => Token::For,
+            "function" => Token::Function,
+            "return" => Token::Return,
+            "continue" => Token::Continue,
+            "break" => Token::Break,
+
+            
+
             _ => Token::Ident(id),
         }
         
