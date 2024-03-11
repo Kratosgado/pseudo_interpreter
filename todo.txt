@@ -3,13 +3,6 @@ known bugs:
 
 to be implemented:
     disallow naming variables with keywords
-    boolean values
-    comparisons:
-        LessThan,
-        GreaterThan,
-        LessThanEqual,
-        GreaterThanEqual,
-        NotEqual,
     control structures:
         If,
         Else,

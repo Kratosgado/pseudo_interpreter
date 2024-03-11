@@ -1,7 +1,4 @@
-use super::eval_result::EvalResult;
-use crate::lexer::expr::Expr;
-use crate::lexer::operator::Operator;
-use crate::lexer::statement::Statement;
+use super::{eval_result::EvalResult, Statement, Expr, Operator};
 
 use std::collections::HashMap;
 

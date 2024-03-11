@@ -1,7 +1,4 @@
-use crate::lexer::expr::Expr;
-use crate::lexer::operator::Operator;
-use crate::lexer::statement::Statement;
-use crate::lexer::token::Token;
+use super::{Expr, Statement, Token, Operator};
 
 pub struct Parser {
     tokens: Vec<Token>,
