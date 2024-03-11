@@ -5,3 +5,17 @@ pub use super::lexer::enums::{
      token::Token,
      statement::Statement,
 };
+
+mod  functions {
+     pub mod assignment;
+     pub mod factor_term;
+     pub mod comparison;
+     pub mod print_expr;
+}
+
+pub use functions::{
+     assignment::Assignment,
+     factor_term::FactorTerm,
+     comparison::Comparison,
+     print_expr::PrintExpr,
+};

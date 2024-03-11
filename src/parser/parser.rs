@@ -1,8 +1,7 @@
-use super::{Expr, Statement, Token, Operator};
-
+use super::{ Statement, Token, PrintExpr, Assignment};
 pub struct Parser {
     tokens: Vec<Token>,
-    current_token: Option<Token>,
+    pub current_token: Option<Token>,
     position: usize,
 }
 
@@ -17,7 +16,7 @@ impl Parser {
         parser
     }
 
-    fn next_token(&mut self) {
+    pub fn next_token(&mut self) {
         if self.position < self.tokens.len() {
             self.current_token = Some(self.tokens[self.position].clone());
 
@@ -38,7 +37,6 @@ impl Parser {
                 Token::EOF => break,
                 _ => {
                     let expr = self.parse_expr();
-                    println!("{:?}", expr);
                     statements.push(Statement::Expr(expr));
                 }
             }
@@ -46,135 +44,4 @@ impl Parser {
         statements
     }
 
-    fn parse_assignment(&mut self) -> Statement {
-        match &self.current_token {
-            Some(Token::Ident(var)) => {
-                let var = var.clone();
-                self.next_token();
-                if let Some(Token::Assign) = self.current_token {
-                    self.next_token();
-                    let expr = self.parse_expr();
-                    Statement::Assignment(var, expr)
-                } else {
-                    panic!("Expected assignment operator");
-                }
-            }
-            _ => todo!("Implement for other types of assignments"),
-        }
-    }
-
-    fn parse_print(&mut self) -> Statement {
-        self.next_token();
-        match &self.current_token {
-            Some(Token::Ident(var)) => {
-                let var = var.clone();
-                self.next_token();
-                Statement::Print(Expr::Variable(var))
-            }
-            _ => {
-                let expr = self.parse_expr();
-                Statement::Print(expr)
-            }
-        }
-    }
-
-    fn parse_expr(&mut self) -> Expr {
-        println!("{:?}", self.current_token);
-        let mut left = self.parse_term();
-
-        while let Some(token) = &self.current_token {
-            match token {
-                Token::Plus | Token::Minus => {
-                    let op = if matches!(token, Token::Plus) {
-                        Operator::Add
-                    } else {
-                        Operator::Subtract
-                    };
-                    self.next_token();
-                    let right = self.parse_term();
-                    left = Expr::BinOp(Box::new(left), op, Box::new(right));
-                }
-                _ => break,
-            };
-        }
-        left
-    }
-
-    fn parse_term(&mut self) -> Expr {
-        let mut left = self.parse_factor();
-
-        while let Some(token) = &self.current_token {
-            match token {
-                Token::Equal | Token::LessThan | Token::GreaterThan | Token::LessThanEqual | Token::GreaterThanEqual | Token::NotEqual => {
-                    left = self.parse_comparison(left);
-                }
-                Token::Multiply | Token::Divide | Token::Modulo => {
-                    let op = if matches!(token, Token::Multiply) {
-                        Operator::Multiply
-                    } else if matches!(token, Token::Modulo) {
-                        Operator::Modulo
-                    } else {
-                        Operator::Divide
-                    };
-                    self.next_token();
-                    let right = self.parse_factor();
-                    left = Expr::BinOp(Box::new(left), op, Box::new(right));
-                }
-                _ => break,
-            }
-        }
-        left
-    }
-
-    fn parse_factor(&mut self) -> Expr {
-        match self.current_token.take() {
-            Some(Token::Number(value)) => {
-                self.next_token();
-                Expr::Number(value)
-            }
-            Some(Token::LParen) => {
-                self.next_token();
-                let expr = self.parse_expr();
-                if let Some(Token::RParen) = self.current_token {
-                    self.next_token();
-                    expr
-                } else {
-                    panic!("Expected closing parenthesis");
-                }
-            }
-            Some(Token::Str(value)) => {
-                self.next_token();
-                Expr::Str(value)
-            }
-            Some(Token::Ident(var)) => {
-                self.next_token();
-                Expr::Variable(var)
-            }
-            Some(Token::Boolean(value)) => {
-                self.next_token();
-                Expr::Boolean(value)
-            }
-            Some(token) => todo!("Implement parsing of {:?}", token),
-            None => panic!("Expected a token"),
-        }
-    }
-
-    fn parse_comparison(&mut self, left: Expr) -> Expr {
-        if let Some(token) = &self.current_token {
-            let op = match token {
-                Token::Equal => Operator::Equal,
-                Token::LessThan => Operator::LessThan,
-                Token::GreaterThan => Operator::GreaterThan,
-                Token::LessThanEqual => Operator::LessThanEqual,
-                Token::GreaterThanEqual => Operator::GreaterThanEqual,
-                Token::NotEqual => Operator::NotEqual,
-                _ => panic!("Expected comparison operator"),
-            };
-            self.next_token();
-            let right = self.parse_expr();
-            Expr::Comparison(Box::new(left), op, Box::new(right))
-        } else {
-            left
-        }
-    }
 }
