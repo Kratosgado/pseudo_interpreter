@@ -66,24 +66,6 @@ impl Evaluator {
     fn evaluate_expr(&self, expr: &Expr) -> EvalResult {
         match expr {
             Expr::Number(num) => EvalResult::Number(*num),
-            Expr::BinOp(left, op, right) => {
-                let left_val = match self.evaluate_expr(left) {
-                    EvalResult::Number(val) => val,
-                    _ => panic!("Expected number"),
-                };
-                let right_val = match self.evaluate_expr(right) {
-                    EvalResult::Number(val) => val,
-                    _ => panic!("Expected a number"),
-                };
-                let result = match op {
-                    Operator::Add => left_val + right_val,
-                    Operator::Subtract => left_val - right_val,
-                    Operator::Multiply => left_val * right_val,
-                    Operator::Divide => left_val / right_val,
-                    Operator::Modulo => left_val % right_val,
-                };
-                EvalResult::Number(result)
-            }
             Expr::Str(value) => EvalResult::Str(value.clone()),
             Expr::Variable(var) => {
                 if let Some(value) = self.symbol_table.get(var) {
@@ -92,6 +74,37 @@ impl Evaluator {
                     panic!("undefined variable: {}", var)
                 }
             }
+            Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
+            Expr::Boolean(val) => EvalResult::Boolean(*val),
+            Expr::Equals(left, right) => {
+                let left_val = self.evaluate_expr(left);
+                let right_val = self.evaluate_expr(right);
+                EvalResult::Boolean(left_val == right_val)
+            }
+            Expr::LessThan(_, _) => todo!(),
+            Expr::GreaterThan(_, _) => todo!(),
+            Expr::LessThanEqual(_, _) => todo!(),
+            Expr::GreaterThanEqual(_, _) => todo!(),
+            Expr::NotEqual(_, _) => todo!(),
         }
+    }
+
+    fn arithmetic_expr(&self, left: &Expr, op: &Operator, right: &Expr) -> EvalResult {
+        let left_val = match self.evaluate_expr(left) {
+            EvalResult::Number(val) => val,
+            _ => panic!("Expected number"),
+        };
+        let right_val = match self.evaluate_expr(right) {
+            EvalResult::Number(val) => val,
+            _ => panic!("Expected a number"),
+        };
+        let result = match op {
+            Operator::Add => left_val + right_val,
+            Operator::Subtract => left_val - right_val,
+            Operator::Multiply => left_val * right_val,
+            Operator::Divide => left_val / right_val,
+            Operator::Modulo => left_val % right_val,
+        };
+        EvalResult::Number(result)
     }
 }

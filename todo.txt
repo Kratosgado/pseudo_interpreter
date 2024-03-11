@@ -3,6 +3,7 @@ known bugs:
 
 to be implemented:
     disallow naming variables with keywords
+    boolean values
     comparisons:
         Equals,        
         LessThan,

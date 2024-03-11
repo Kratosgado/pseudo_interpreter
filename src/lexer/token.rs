@@ -3,7 +3,7 @@ pub enum Token {
     // Datatype tokens
     Number(i64),
     Str(String),
-    Bool(bool),
+    Boolean(bool),
 
     // variable
     Variable,

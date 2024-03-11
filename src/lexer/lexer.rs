@@ -129,7 +129,10 @@ impl<'a> Lexer<'a> {
         }
         match id.to_lowercase().as_str() {
             "print" | "output" | "display" => Token::Print,
+            "true" => Token::Boolean(true),
+            "false" => Token::Boolean(false),
             _ => Token::Ident(id),
         }
+        
     }
 }

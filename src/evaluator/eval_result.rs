@@ -4,8 +4,8 @@ use std::fmt;
 pub enum EvalResult {
     Number(i64),
     Str(String),
-    Bool(bool),
-    None,
+    Boolean(bool),
+    // None,
 }
 
 impl fmt::Display for EvalResult {
@@ -13,8 +13,8 @@ impl fmt::Display for EvalResult {
         match self {
             EvalResult::Number(n) => write!(f, "{}", n),
             EvalResult::Str(s) => write!(f, "{}", s),
-            EvalResult::Bool(b) => write!(f, "{}", b),
-            EvalResult::None => write!(f, "None"),
+            EvalResult::Boolean(b) => write!(f, "{}", b),
+            // EvalResult::None => write!(f, "None"),
         }
     }
 }

@@ -23,6 +23,7 @@ impl Parser {
     fn next_token(&mut self) {
         if self.position < self.tokens.len() {
             self.current_token = Some(self.tokens[self.position].clone());
+
             self.position += 1;
         } else {
             self.current_token = Some(Token::EOF);
@@ -74,7 +75,6 @@ impl Parser {
                 Statement::Print(Expr::Variable(var))
             }
             _ => {
-                self.next_token();
                 let expr = self.parse_expr();
                 Statement::Print(expr)
             }
@@ -82,6 +82,7 @@ impl Parser {
     }
 
     fn parse_expr(&mut self) -> Expr {
+        println!("{:?}", self.current_token);
         let mut left = self.parse_term();
 
         while let Some(token) = &self.current_token {
@@ -107,6 +108,11 @@ impl Parser {
 
         while let Some(token) = &self.current_token {
             match token {
+                Token::Equals => {
+                    self.next_token();
+                    let right = self.parse_expr();
+                    left = Expr::Equals(Box::new(left), Box::new(right));
+                }
                 Token::Multiply | Token::Divide | Token::Modulo => {
                     let op = if matches!(token, Token::Multiply) {
                         Operator::Multiply
@@ -149,10 +155,13 @@ impl Parser {
                 self.next_token();
                 Expr::Variable(var)
             }
-            _ => todo!(
-                "Implement parsing of strings and variables, {:?}",
-                self.current_token
-            ),
+            Some(Token::Boolean(value)) => {
+                self.next_token();
+                Expr::Boolean(value)
+            }
+
+            Some(token) => todo!("Implement parsing of {:?}", token),
+            None => panic!("Expected a token"),
         }
     }
 }
