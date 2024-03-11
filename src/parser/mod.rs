@@ -6,7 +6,7 @@ pub use super::lexer::enums::{
      statement::Statement,
 };
 
-mod  functions {
+mod functions {
      pub mod assignment;
      pub mod factor_term;
      pub mod comparison;

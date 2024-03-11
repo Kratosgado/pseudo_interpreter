@@ -6,3 +6,16 @@ pub use super::lexer::enums::{
     expr::Expr,
      operator::Operator
 };
+
+mod functions {
+    pub mod arithmetics;
+    pub mod comparison;
+    pub mod expression;
+}
+pub use eval_result::EvalResult;
+
+pub use functions::{
+    arithmetics::Arithmetics,
+    comparison::Comparison,
+    expression::Expression,
+};
