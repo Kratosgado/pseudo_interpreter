@@ -1,6 +1,6 @@
 use crate::lexer::enums::token::Token;
 
-use super::super::{parser::Parser, PrintExpr, Statement, Assignment};
+use super::super::{parser::Parser, Assignment, PrintExpr, Statement};
 
 pub trait ParseIf {
     fn parse_if(&mut self) -> Statement;
@@ -11,6 +11,7 @@ impl ParseIf for Parser {
         self.next_token();
         let condition = self.parse_expr();
         let mut consequence: Vec<Statement> = Vec::new();
+        let mut alternative: Vec<Statement> = Vec::new();
 
         if let Some(Token::Then) = self.current_token {
             self.next_token();
@@ -20,24 +21,48 @@ impl ParseIf for Parser {
                         self.next_token();
                         break;
                     }
+                    Token::Else => {
+                        self.next_token();
+                        while let Some(token) = &self.current_token {
+                            match token {
+                                Token::EndIf => {
+                                    self.next_token();
+                                    break;
+                                }
+                                Token::Print => alternative.push(self.parse_print()),
+                                Token::Ident(_) => alternative.push(self.parse_assignment()),
+                                Token::If => alternative.push(self.parse_if()),
+                                Token::EOL => self.next_token(),
+                                Token::EOF => break,
+                                _ => {
+                                    let expr = self.parse_expr();
+                                    alternative.push(Statement::Expr(expr));
+                                }
+                            }
+                        }
+                    }
                     Token::Print => consequence.push(self.parse_print()),
                     Token::Ident(_) => consequence.push(self.parse_assignment()),
+                    Token::If => consequence.push(self.parse_if()),
                     Token::EOL => self.next_token(),
                     Token::EOF => break,
                     _ => {
                         let expr = self.parse_expr();
                         consequence.push(Statement::Expr(expr));
-                    }
-                    // _ => {
-                    //     consequence = self.parse();
-                    //     panic!("Expected 'EndIf' keyword");
-                    // }
+                    } // _ => {
+                      //     consequence = self.parse();
+                      //     panic!("Expected 'EndIf' keyword");
+                      // }
                 }
             }
         } else {
             panic!("Expected 'then' after if condition");
         }
 
-        Statement::If(condition, Box::new(consequence), None)
+        Statement::If(
+            condition,
+            Box::new(consequence),
+            Some(Box::new(alternative)),
+        )
     }
 }
