@@ -1,4 +1,6 @@
-use super::super::{parser::Parser, ParseAssignment, ParsePrintExpr, ParseWhile, Statement, Token};
+use super::super::{
+    parser::Parser, ParseAssignment, ParseFor, ParsePrintExpr, ParseWhile, Statement, Token,
+};
 
 pub trait ParseIf {
     fn parse_if(&mut self) -> Statement;
@@ -15,52 +17,40 @@ impl ParseIf for Parser {
             self.next_token();
             while let Some(token) = &self.current_token {
                 match token {
-                    Token::EndIf => {
-                        // self.if_stack.pop().expect("Unmatched endif");
-                        self.next_token();
-                        break;
-                    }
                     Token::Else => {
                         self.next_token();
                         while let Some(token) = &self.current_token {
                             match token {
-                                Token::EndIf => {
-                                    // self.next_token();
-                                    break;
-                                }
                                 Token::Print => alternative.push(self.parse_print()),
                                 Token::Ident(_) => alternative.push(self.parse_assignment()),
-                                Token::If => {
-                                    // let new_if = self.parse_if();
-                                    alternative.push(self.parse_if());
-                                    // self.if_stack.push(new_if);
-                                }
+                                Token::If => alternative.push(self.parse_if()),
+                                Token::For => alternative.push(self.parse_for()),
                                 Token::EOL => self.next_token(),
                                 Token::EOF => break,
-                                _ => {
-                                    let expr = self.parse_expr();
-                                    alternative.push(Statement::Expr(expr));
+                                Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
+                                    alternative.push(Statement::Expr(self.parse_expr()))
                                 }
+                                Token::EndIf => break,
+                                _ => panic!("Expected 'EndIf' keyword"),
                             }
                         }
                     }
                     Token::Print => consequence.push(self.parse_print()),
                     Token::Ident(_) => consequence.push(self.parse_assignment()),
                     Token::While => consequence.push(self.parse_while()),
-                    Token::If => {
-                        // let new_if = self.parse_if();
-                        consequence.push(self.parse_if());
-                        // self.if_stack.push(new_if);
-                    }
+                    Token::If => consequence.push(self.parse_if()),
+                    Token::For => consequence.push(self.parse_for()),
+
                     Token::EOL => self.next_token(),
                     Token::EOF => break,
-                    _ => {
-                        let expr = self.parse_expr();
-                        consequence.push(Statement::Expr(expr));
-                    } // _ => {
-                      //     consequence = self.parse();
-                      //     panic!("Expected 'EndIf' keyword");
-                      // }
+                    Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
+                        consequence.push(Statement::Expr(self.parse_expr()))
+                    }
+                    Token::EndIf => {
+                        self.next_token();
+                        break;
+                    }
+                    _ => panic!("Expected 'EndIf' keyword"),
                 }
             }
         } else {

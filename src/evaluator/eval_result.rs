@@ -1,6 +1,8 @@
 use std::fmt;
+use std::cmp::{PartialEq, PartialOrd};
 
-#[derive(Debug, PartialEq, Clone)]
+
+#[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum EvalResult {
     Number(i64),
     Str(String),

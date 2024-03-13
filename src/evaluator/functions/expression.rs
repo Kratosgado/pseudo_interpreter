@@ -1,11 +1,11 @@
 use crate::Evaluator;
 use super::super::{Expr, EvalResult, Arithmetics, Comparison};
 
-pub trait Expression {
+pub trait EvalExpression {
     fn evaluate_expr(&self, expr: &Expr) -> EvalResult;
 }
 
-impl Expression for Evaluator {
+impl EvalExpression for Evaluator {
     
     /// Evaluates an expression and returns the result.
     ///

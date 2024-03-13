@@ -1,5 +1,5 @@
 use crate::Evaluator;
-use super::super::{Expr, EvalResult, Operator, Expression};
+use super::super::{Expr, EvalResult, Operator, EvalExpression};
 
 
 pub trait Arithmetics {

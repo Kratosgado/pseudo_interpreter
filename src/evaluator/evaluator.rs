@@ -1,4 +1,4 @@
-use super::{eval_result::EvalResult, EvalIf, EvalStatement, Expression, Statement};
+use super::{eval_result::EvalResult, EvalStatement, Statement};
 
 use std::collections::HashMap;
 

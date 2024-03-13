@@ -5,10 +5,6 @@ known bugs:
 to be implemented:
     disallow naming variables with keywords
     control structures:
-        If,
-        Else,
-        While,
-        For,
         Function,
         Return,
         Continue,

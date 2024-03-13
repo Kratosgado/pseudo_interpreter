@@ -1,4 +1,4 @@
-use super::super::{EvalResult, Expr, Operator, evaluator::Evaluator, Expression};
+use super::super::{EvalResult, Expr, Operator, evaluator::Evaluator, EvalExpression};
 
 
 pub trait Comparison {

@@ -1,5 +1,7 @@
-
-use super::super::{evaluator::Evaluator, EvalResult, Expression, Statement, EvalIf, EvalWhile};
+use super::{
+    super::{evaluator::Evaluator, EvalIf, EvalWhile, EvalExpression, Statement},
+    eval_for::EvalFor,
+};
 pub trait EvalStatement {
     fn evaluate_statement(&mut self, statement: &Statement);
 }
@@ -23,7 +25,7 @@ impl EvalStatement for Evaluator {
             }
             Statement::If(_, _, _) => self.eval_if(statement),
             Statement::While(_, _) => self.eval_while(statement),
+            Statement::For(_, _, _, _, _) => self.eval_for(statement),
         }
     }
-    
 }

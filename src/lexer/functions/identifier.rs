@@ -33,11 +33,18 @@ impl<'a> Identifier for Lexer<'a> {
             "then" => Token::Then,
             "endif" => Token::EndIf,
             "else" => Token::Else,
+            
+            // loop
             "do" => Token::Do,
             "while" => Token::While,
+            "to" => Token::To,
             "endwhile" => Token::EndWhile,
             "for" => Token::For,
+            "step" => Token::Step,
+            "endfor" => Token::EndFor,
+
             "function" => Token::Function,
+            "endfunction" => Token::EndFunction,
             "return" => Token::Return,
             "continue" => Token::Continue,
             "break" => Token::Break,

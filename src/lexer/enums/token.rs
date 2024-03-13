@@ -42,12 +42,20 @@ pub enum Token {
     If,
     Else,
     EndIf,
-    Then, Do,
+    Then, 
+    
+    // loops
+    Do,
     While,
     EndWhile,
     For,
+    To,
+    Step,
     EndFor,
+
+    // function tokens
     Function,
+    EndFunction,
     Return,
     Continue,
     Break,

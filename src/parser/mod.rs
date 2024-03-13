@@ -7,6 +7,7 @@ mod functions {
      pub mod print_expr;
      pub mod parse_if;
      pub mod parse_while;
+     pub mod parse_for;
 }
 
 pub use parser::Parser;
@@ -24,4 +25,5 @@ pub use functions::{
      print_expr::ParsePrintExpr,
      parse_if::ParseIf,
      parse_while::ParseWhile,
+     parse_for::ParseFor,
 };

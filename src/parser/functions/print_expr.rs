@@ -13,10 +13,8 @@ impl ParsePrintExpr for Parser {
                 self.next_token();
                 Statement::Print(Expr::Variable(var))
             }
-            _ => {
-                let expr = self.parse_expr();
-                Statement::Print(expr)
-            }
+            Some(Token::Number(_) | Token::Str(_) | Token::Boolean(_) )=> Statement::Print(self.parse_expr()),
+            _ => panic!("Expected an expression or variable after 'Print' keyword"),
         }
     }
 
