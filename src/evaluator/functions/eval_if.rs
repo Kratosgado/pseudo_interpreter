@@ -1,5 +1,4 @@
-
-use super::super::{evaluator::Evaluator, Expression, EvalResult, Statement};
+use super::super::{evaluator::Evaluator, EvalResult, Expression, Statement};
 
 pub trait EvalIf {
     fn eval_if(&mut self, statement: &Statement);
@@ -7,14 +6,16 @@ pub trait EvalIf {
 }
 
 impl EvalIf for Evaluator {
-    fn eval_if(&mut self, statement: &Statement)  {
-        if let Statement::If(condition, consequence, alternative) = statement {
+    fn eval_if(&mut self, statement: &Statement) {
+        if let Statement::IfStatement(condition, consequence, alternative) = statement {
             let condition = self.evaluate_expr(condition);
             if let EvalResult::Boolean(true) = condition {
+                println!("consequences: {:?}", consequence);
                 for statement in consequence.iter() {
                     self.evaluate_statement(statement);
                 }
             } else {
+                println!("alternative: {:?}", alternative);
                 if let Some(alternative) = alternative {
                     for statement in alternative.iter() {
                         self.evaluate_statement(statement);
@@ -37,7 +38,7 @@ impl EvalIf for Evaluator {
                 let value = self.evaluate_expr(expr);
                 self.symbol_table.insert(var.clone(), value.clone());
             }
-            Statement::If(_, _, _) => self.eval_if(statement),
+            Statement::IfStatement(_, _, _) => self.eval_if(statement),
         }
     }
 }

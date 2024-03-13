@@ -1,6 +1,5 @@
-use super::super::{Expr, Token, parser::Parser, Operator};
+use super::super::{parser::Parser, Expr, Operator, Token};
 use super::{comparison::Comparison, print_expr::PrintExpr};
-
 
 pub trait FactorTerm {
     fn parse_factor(&mut self) -> Expr;
@@ -8,7 +7,6 @@ pub trait FactorTerm {
 }
 
 impl FactorTerm for Parser {
-
     fn parse_term(&mut self) -> Expr {
         let mut left = self.parse_factor();
 
@@ -39,7 +37,7 @@ impl FactorTerm for Parser {
         }
         left
     }
-    
+
     fn parse_factor(&mut self) -> Expr {
         match self.current_token.take() {
             Some(Token::Number(value)) => {
@@ -72,5 +70,4 @@ impl FactorTerm for Parser {
             None => panic!("Expected a token"),
         }
     }
-
 }

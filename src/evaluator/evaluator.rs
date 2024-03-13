@@ -47,7 +47,7 @@ impl Evaluator {
                     self.symbol_table.insert(var.clone(), value.clone());
                     self.next_statement();
                 }
-                Statement::If(_, _, _) => self.eval_if(&statement),
+                Statement::IfStatement(_, _, _) => self.eval_if(&statement),
             }
         }
     }

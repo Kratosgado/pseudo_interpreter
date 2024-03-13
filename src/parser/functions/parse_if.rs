@@ -1,6 +1,4 @@
-use crate::lexer::enums::token::Token;
-
-use super::super::{parser::Parser, Assignment, PrintExpr, Statement};
+use super::super::{parser::Parser, Assignment, PrintExpr, Statement, Token};
 
 pub trait ParseIf {
     fn parse_if(&mut self) -> Statement;
@@ -18,6 +16,7 @@ impl ParseIf for Parser {
             while let Some(token) = &self.current_token {
                 match token {
                     Token::EndIf => {
+                        self.if_stack.pop().expect("Unmatched endif");
                         self.next_token();
                         break;
                     }
@@ -31,7 +30,11 @@ impl ParseIf for Parser {
                                 }
                                 Token::Print => alternative.push(self.parse_print()),
                                 Token::Ident(_) => alternative.push(self.parse_assignment()),
-                                Token::If => alternative.push(self.parse_if()),
+                                Token::If => {
+                                    let new_if = self.parse_if();
+                                    alternative.push(new_if.clone());
+                                    self.if_stack.push(new_if);
+                                }
                                 Token::EOL => self.next_token(),
                                 Token::EOF => break,
                                 _ => {
@@ -43,7 +46,11 @@ impl ParseIf for Parser {
                     }
                     Token::Print => consequence.push(self.parse_print()),
                     Token::Ident(_) => consequence.push(self.parse_assignment()),
-                    Token::If => consequence.push(self.parse_if()),
+                    Token::If => {
+                        let new_if = self.parse_if();
+                        consequence.push(new_if.clone());
+                        self.if_stack.push(new_if);
+                    }
                     Token::EOL => self.next_token(),
                     Token::EOF => break,
                     _ => {
@@ -59,10 +66,6 @@ impl ParseIf for Parser {
             panic!("Expected 'then' after if condition");
         }
 
-        Statement::If(
-            condition,
-            Box::new(consequence),
-            Some(Box::new(alternative)),
-        )
+        Statement::IfStatement(condition, Box::new(consequence), Some(Box::new(alternative)))
     }
 }

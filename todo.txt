@@ -1,5 +1,5 @@
 known bugs:
-    
+    nested if else 
 
 to be implemented:
     disallow naming variables with keywords
