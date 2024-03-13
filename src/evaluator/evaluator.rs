@@ -21,7 +21,7 @@ impl Evaluator {
         evaluator
     }
 
-    fn next_statement(&mut self) {
+    pub fn next_statement(&mut self) {
         if self.position < self.statements.len() {
             self.current_statement = Some(self.statements[self.position].clone());
             self.position += 1;
