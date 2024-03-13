@@ -20,6 +20,7 @@ impl<'a> Identifier for Lexer<'a> {
         }
         match id.to_lowercase().as_str() {
             "print" | "output" | "display" => Token::Print,
+            "input" | "get" | "read" | "recieve" => Token::Input,
             "true" => Token::Boolean(true),
             "false" => Token::Boolean(false),
 

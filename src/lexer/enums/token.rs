@@ -26,6 +26,7 @@ pub enum Token {
 
     // keywords
     Print,
+    Input,
 
     // comparisons
     Equal, // equality

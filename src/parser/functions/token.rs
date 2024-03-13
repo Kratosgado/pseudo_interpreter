@@ -1,3 +1,5 @@
+use crate::parser::ParseInput;
+
 use super::super::{
     ParseAssignment, ParseIf, ParsePrintExpr, ParseWhile, Parser, Statement, Token,ParseFor
 };
@@ -11,6 +13,7 @@ impl ParseToken for Parser {
         while let Some(token) = &self.current_token {
             match token {
                 Token::Print => statements.push(self.parse_print()),
+                Token::Input => statements.push(self.parse_input()),
                 Token::Ident(_) => statements.push(self.parse_assignment()),
                 Token::While => statements.push(self.parse_while()),
                 Token::If => statements.push(self.parse_if()),
