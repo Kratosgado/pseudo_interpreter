@@ -44,6 +44,7 @@ pub enum Token {
     EndIf,
     Then, Do,
     While,
+    EndWhile,
     For,
     EndFor,
     Function,

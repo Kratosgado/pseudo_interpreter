@@ -1,38 +1,42 @@
 use crate::lexer::lexer::Lexer;
 use super::super::Token;
 
+pub trait Operator {
+    fn encode_operator(&mut self)-> Token;
+}
 
-/// catch operators
-pub fn operator(lexer: &mut Lexer) -> Token {
-    match lexer.current_char {
-        Some('+') => {
-            lexer.next_char();
-            Token::Plus
+impl <'a> Operator for Lexer<'a> {
+    fn encode_operator(&mut self)-> Token {
+        match self.current_char {
+            Some('+') => {
+                self.next_char();
+                Token::Plus
+            }
+            Some('-') => {
+                self.next_char();
+                Token::Minus
+            }
+            Some('*') => {
+                self.next_char();
+                Token::Multiply
+            }
+            Some('/') => {
+                self.next_char();
+                Token::Divide
+            }
+            Some('%') => {
+                self.next_char();
+                Token::Modulo
+            }
+            Some('(') => {
+                self.next_char();
+                Token::LParen
+            }
+            Some(')') => {
+                self.next_char();
+                Token::RParen
+            }
+            _ => panic!("Invalid operator"),
         }
-        Some('-') => {
-            lexer.next_char();
-            Token::Minus
-        }
-        Some('*') => {
-            lexer.next_char();
-            Token::Multiply
-        }
-        Some('/') => {
-            lexer.next_char();
-            Token::Divide
-        }
-        Some('%') => {
-            lexer.next_char();
-            Token::Modulo
-        }
-        Some('(') => {
-            lexer.next_char();
-            Token::LParen
-        }
-        Some(')') => {
-            lexer.next_char();
-            Token::RParen
-        }
-        _ => panic!("Invalid operator"),
     }
 }

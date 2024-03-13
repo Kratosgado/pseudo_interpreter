@@ -1,66 +1,72 @@
-
-use crate::lexer::lexer::Lexer;
 use super::super::Token;
-/// catch comparisons
-/// catch =, ==, <, >, <=, >=, !=
-/// catch &&, ||
-/// catch !
-pub fn comparison(lexer: &mut Lexer) -> Token {
-    match lexer.current_char {
-        Some('<') => {
-            lexer.next_char();
-            if let Some('=') = lexer.current_char {
-                lexer.next_char();
-                Token::LessThanEqual
-            } else {
-                Token::LessThan
+use crate::lexer::lexer::Lexer;
+
+pub trait Comparison {
+    /// catch comparisons
+    /// catch =, ==, <, >, <=, >=, !=
+    /// catch &&, ||
+    /// catch !
+    fn encode_comparison(&mut self) -> Token;
+}
+
+impl <'a> Comparison for Lexer<'a> {
+    fn encode_comparison(&mut self) -> Token {
+        match self.current_char {
+            Some('<') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::LessThanEqual
+                } else {
+                    Token::LessThan
+                }
             }
-        }
-        Some('>') => {
-            lexer.next_char();
-            if let Some('=') = lexer.current_char {
-                lexer.next_char();
-                Token::GreaterThanEqual
-            } else {
-                Token::GreaterThan
+            Some('>') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::GreaterThanEqual
+                } else {
+                    Token::GreaterThan
+                }
             }
-        }
-        Some('!') => {
-            lexer.next_char();
-            if let Some('=') = lexer.current_char {
-                lexer.next_char();
-                Token::NotEqual
-            } else {
-                Token::Not
+            Some('!') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::NotEqual
+                } else {
+                    Token::Not
+                }
             }
-        }
-        Some('=') => {
-            lexer.next_char();
-            if let Some('=') = lexer.current_char {
-                lexer.next_char();
-                Token::Equal
-            } else {
-                Token::Assign
+            Some('=') => {
+                self.next_char();
+                if let Some('=') = self.current_char {
+                    self.next_char();
+                    Token::Equal
+                } else {
+                    Token::Assign
+                }
             }
-        }
-        Some('&') => {
-            lexer.next_char();
-            if let Some('&') = lexer.current_char {
-                lexer.next_char();
-                Token::And
-            } else {
-                panic!("Invalid character: &");
+            Some('&') => {
+                self.next_char();
+                if let Some('&') = self.current_char {
+                    self.next_char();
+                    Token::And
+                } else {
+                    panic!("Invalid character: &");
+                }
             }
-        }
-        Some('|') => {
-            lexer.next_char();
-            if let Some('|') = lexer.current_char {
-                lexer.next_char();
-                Token::Or
-            } else {
-                panic!("Invalid character: |");
+            Some('|') => {
+                self.next_char();
+                if let Some('|') = self.current_char {
+                    self.next_char();
+                    Token::Or
+                } else {
+                    panic!("Invalid character: |");
+                }
             }
+            _ => panic!("Invalid character"),
         }
-        _ => panic!("Invalid character"),
     }
 }

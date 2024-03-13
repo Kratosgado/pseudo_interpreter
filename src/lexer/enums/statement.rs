@@ -7,6 +7,7 @@ pub enum Statement {
     Print(Expr),
     // Add more variants as needed
     IfStatement( Expr, Box<Vec<Statement>>,Option<Box<Vec<Statement>>>),
+    While(Expr, Box<Vec<Statement>>)
 }
 
 pub struct IFElseBlock {

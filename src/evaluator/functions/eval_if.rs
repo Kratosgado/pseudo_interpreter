@@ -1,8 +1,7 @@
-use super::super::{evaluator::Evaluator, EvalResult, Expression, Statement};
+use super::super::{evaluator::Evaluator, EvalResult, Expression, Statement, EvalStatement};
 
 pub trait EvalIf {
     fn eval_if(&mut self, statement: &Statement);
-    fn evaluate_statement(&mut self, statement: &Statement);
 }
 
 impl EvalIf for Evaluator {
@@ -25,20 +24,4 @@ impl EvalIf for Evaluator {
         }
     }
 
-    fn evaluate_statement(&mut self, statement: &Statement) {
-        match statement {
-            Statement::Expr(expr) => {
-                self.evaluate_expr(expr);
-            }
-            Statement::Print(expr) => {
-                let value = self.evaluate_expr(expr);
-                println!("{}", value);
-            }
-            Statement::Assignment(var, expr) => {
-                let value = self.evaluate_expr(expr);
-                self.symbol_table.insert(var.clone(), value.clone());
-            }
-            Statement::IfStatement(_, _, _) => self.eval_if(statement),
-        }
-    }
 }

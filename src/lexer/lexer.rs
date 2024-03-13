@@ -1,6 +1,6 @@
 use std::str::Chars;
 
-use super::{comparison, identifier, operator, Datatype, Token};
+use super::{Operator,Identifier, Comparison, Datatype, Token};
 
 
 pub struct Lexer<'a> {
@@ -29,9 +29,9 @@ impl<'a> Lexer<'a> {
         while let Some(ch) = self.current_char {
             match ch {
                 '0'..='9' => tokens.push(self.number()),
-                'a'..='z' | 'A'..='Z' | '_' => tokens.push(identifier(self)),
-                '+' | '-' | '*' | '/' | '%' | '(' | ')' => tokens.push(operator(self)),
-                '<' | '>' | '!' | '=' | '&' | '|' => tokens.push(comparison(self)),
+                'a'..='z' | 'A'..='Z' | '_' => tokens.push(self.encode_identifier()),
+                '+' | '-' | '*' | '/' | '%' | '(' | ')' => tokens.push(self.encode_operator()),
+                '<' | '>' | '!' | '=' | '&' | '|' => tokens.push(self.encode_comparison()),
                 '\n' | ';' => {
                     tokens.push(Token::EOL);
                     self.next_char();

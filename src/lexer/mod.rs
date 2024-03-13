@@ -14,9 +14,9 @@ pub mod functions {
 }
 
 use functions::{
-    comparison::comparison,
+    comparison::Comparison,
     datatypes::Datatype,
-    identifier::identifier,
-    operator::operator,
+    identifier::Identifier,
+    operator::Operator,
 };
 use enums::token::Token;

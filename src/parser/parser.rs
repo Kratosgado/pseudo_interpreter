@@ -1,4 +1,4 @@
-use super::{Assignment, Expr, ParseIf, PrintExpr, Statement, Token};
+use super::{Assignment, Expr, ParseIf, ParseWhile, PrintExpr, Statement, Token};
 pub struct Parser {
     tokens: Vec<Token>,
     pub current_token: Option<Token>,
@@ -35,6 +35,7 @@ impl Parser {
             match token {
                 Token::Print => statements.push(self.parse_print()),
                 Token::Ident(_) => statements.push(self.parse_assignment()),
+                Token::While => statements.push(self.parse_while()),
                 Token::If => {
                     self.if_stack.push(Statement::Expr(Expr::Str("()".to_string())));
 

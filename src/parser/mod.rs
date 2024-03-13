@@ -12,6 +12,7 @@ mod functions {
      pub mod comparison;
      pub mod print_expr;
      pub mod parse_if;
+     pub mod parse_while;
 }
 
 pub use functions::{
@@ -20,4 +21,5 @@ pub use functions::{
      comparison::Comparison,
      print_expr::PrintExpr,
      parse_if::ParseIf,
+     parse_while::ParseWhile,
 };
