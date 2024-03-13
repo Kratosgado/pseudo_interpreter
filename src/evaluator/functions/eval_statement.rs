@@ -21,7 +21,7 @@ impl EvalStatement for Evaluator {
                 let value = self.evaluate_expr(expr);
                 self.symbol_table.insert(var.clone(), value);
             }
-            Statement::IfStatement(_, _, _) => self.eval_if(statement),
+            Statement::If(_, _, _) => self.eval_if(statement),
             Statement::While(_, _) => self.eval_while(statement),
         }
     }

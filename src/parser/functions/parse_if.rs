@@ -1,4 +1,4 @@
-use super::super::{parser::Parser, Assignment, PrintExpr, Statement, Token};
+use super::super::{parser::Parser, ParseAssignment, ParsePrintExpr, ParseWhile, Statement, Token};
 
 pub trait ParseIf {
     fn parse_if(&mut self) -> Statement;
@@ -16,7 +16,7 @@ impl ParseIf for Parser {
             while let Some(token) = &self.current_token {
                 match token {
                     Token::EndIf => {
-                        self.if_stack.pop().expect("Unmatched endif");
+                        // self.if_stack.pop().expect("Unmatched endif");
                         self.next_token();
                         break;
                     }
@@ -25,15 +25,15 @@ impl ParseIf for Parser {
                         while let Some(token) = &self.current_token {
                             match token {
                                 Token::EndIf => {
-                                    self.next_token();
+                                    // self.next_token();
                                     break;
                                 }
                                 Token::Print => alternative.push(self.parse_print()),
                                 Token::Ident(_) => alternative.push(self.parse_assignment()),
                                 Token::If => {
-                                    let new_if = self.parse_if();
-                                    alternative.push(new_if.clone());
-                                    self.if_stack.push(new_if);
+                                    // let new_if = self.parse_if();
+                                    alternative.push(self.parse_if());
+                                    // self.if_stack.push(new_if);
                                 }
                                 Token::EOL => self.next_token(),
                                 Token::EOF => break,
@@ -46,10 +46,11 @@ impl ParseIf for Parser {
                     }
                     Token::Print => consequence.push(self.parse_print()),
                     Token::Ident(_) => consequence.push(self.parse_assignment()),
+                    Token::While => consequence.push(self.parse_while()),
                     Token::If => {
-                        let new_if = self.parse_if();
-                        consequence.push(new_if.clone());
-                        self.if_stack.push(new_if);
+                        // let new_if = self.parse_if();
+                        consequence.push(self.parse_if());
+                        // self.if_stack.push(new_if);
                     }
                     Token::EOL => self.next_token(),
                     Token::EOF => break,
@@ -66,6 +67,10 @@ impl ParseIf for Parser {
             panic!("Expected 'then' after if condition");
         }
 
-        Statement::IfStatement(condition, Box::new(consequence), Some(Box::new(alternative)))
+        Statement::If(
+            condition,
+            Box::new(consequence),
+            Some(Box::new(alternative)),
+        )
     }
 }

@@ -1,11 +1,10 @@
-use super::super::{Expr,Statement, Token, parser::Parser, Operator};
-use super::factor_term::FactorTerm;
-pub trait PrintExpr {
+use super::super::{Expr,Statement, Token, ParseFactorTerm, Parser, Operator};
+pub trait ParsePrintExpr {
     fn parse_print(&mut self) -> Statement;
     fn parse_expr(&mut self) -> Expr;
 }
 
-impl PrintExpr for Parser {
+impl ParsePrintExpr for Parser {
     fn parse_print(&mut self) -> Statement {
         self.next_token();
         match &self.current_token {

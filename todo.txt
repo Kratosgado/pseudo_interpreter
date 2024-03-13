@@ -1,5 +1,6 @@
 known bugs:
     nested if else 
+    nested while
 
 to be implemented:
     disallow naming variables with keywords

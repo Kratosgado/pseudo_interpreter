@@ -1,12 +1,10 @@
-use crate::{evaluator::Statement, Parser};
-use super::super::Token;
-use super::print_expr::PrintExpr;
+use super::super::{ParsePrintExpr, Statement, Token, Parser};
 
-pub trait Assignment {
+pub trait ParseAssignment {
     fn parse_assignment(&mut self) -> Statement;
 }
 
-impl Assignment for Parser {
+impl ParseAssignment for Parser {
     fn parse_assignment(&mut self) -> Statement {
         match &self.current_token {
             Some(Token::Ident(var)) => {

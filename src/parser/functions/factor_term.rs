@@ -1,12 +1,11 @@
-use super::super::{parser::Parser, Expr, Operator, Token};
-use super::{comparison::Comparison, print_expr::PrintExpr};
+use super::super::{Parser, Expr, Operator, Token, ParseComparison, ParsePrintExpr};
 
-pub trait FactorTerm {
+pub trait ParseFactorTerm {
     fn parse_factor(&mut self) -> Expr;
     fn parse_term(&mut self) -> Expr;
 }
 
-impl FactorTerm for Parser {
+impl ParseFactorTerm for Parser {
     fn parse_term(&mut self) -> Expr {
         let mut left = self.parse_factor();
 

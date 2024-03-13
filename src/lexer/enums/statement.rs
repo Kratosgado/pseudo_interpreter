@@ -6,7 +6,7 @@ pub enum Statement {
     Assignment(String, Expr),
     Print(Expr),
     // Add more variants as needed
-    IfStatement( Expr, Box<Vec<Statement>>,Option<Box<Vec<Statement>>>),
+    If( Expr, Box<Vec<Statement>>,Option<Box<Vec<Statement>>>),
     While(Expr, Box<Vec<Statement>>)
 }
 

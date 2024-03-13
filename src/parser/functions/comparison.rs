@@ -1,11 +1,10 @@
-use super::super::{Expr, Operator, parser::Parser, Token};
-use super::print_expr::PrintExpr;
+use super::super::{Expr, Operator, Parser, Token, ParsePrintExpr};
 
-pub trait Comparison {
+pub trait ParseComparison {
     fn parse_comparison(&mut self, left: Expr) -> Expr;
 }
 
-impl Comparison for Parser {
+impl ParseComparison for Parser {
     fn parse_comparison(&mut self, left: Expr) -> Expr {
         if let Some(token) = &self.current_token {
             let op = match token {

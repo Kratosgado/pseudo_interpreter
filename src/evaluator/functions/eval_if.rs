@@ -6,7 +6,7 @@ pub trait EvalIf {
 
 impl EvalIf for Evaluator {
     fn eval_if(&mut self, statement: &Statement) {
-        if let Statement::IfStatement(condition, consequence, alternative) = statement {
+        if let Statement::If(condition, consequence, alternative) = statement {
             let condition = self.evaluate_expr(condition);
             if let EvalResult::Boolean(true) = condition {
                 println!("consequences: {:?}", consequence);
