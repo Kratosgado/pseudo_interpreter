@@ -1,8 +1,9 @@
 known bugs:
-    nested if else 
-    nested while
+
 
 to be implemented:
+    recieving inputs
+    arrays
     disallow naming variables with keywords
     control structures:
         Function,

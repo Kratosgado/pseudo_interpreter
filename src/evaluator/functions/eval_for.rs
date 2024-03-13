@@ -1,5 +1,3 @@
-use std::ops::Add;
-
 use crate::evaluator::Expr;
 
 use super::super::{EvalExpression, EvalResult, EvalStatement, Evaluator, Statement};
