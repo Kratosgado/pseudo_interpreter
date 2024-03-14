@@ -9,6 +9,7 @@ impl<'a> Identifier for Lexer<'a> {
     fn encode_identifier(&mut self) -> Token {
         let mut id = String::new();
         let mut size: Token = Token::Null;
+        let mut index: Token = Token::Null;
         while let Some(ch) = self.current_char {
             match ch {
                 'a'..='z' | 'A'..='Z' | '0'..='9' | '_' => {
@@ -17,13 +18,18 @@ impl<'a> Identifier for Lexer<'a> {
                 }
                 '[' => {
                     self.next_char();
-                    size = self.number();
+                    match &self.current_char {
+                        Some('0'..='9') => {
+                            size = self.number();
+                        }
+                        _ => {
+                            index = self.encode_identifier();
+                        }
+                    }
                 }
-                ']' => {
+               ']' | '\t' | '\n' => {
                     self.next_char();
-                }
-                '\t' | '\n' => {
-                    self.next_char();
+                    break;
                 }
                 _ => break,
             }
@@ -63,6 +69,8 @@ impl<'a> Identifier for Lexer<'a> {
             _ => {
                 if size != Token::Null {
                     Token::Array(id, Box::new(size))
+                } else if index != Token::Null {
+                    Token::Array(id, Box::new(index))
                 } else {
                     Token::Ident(id)
                 }

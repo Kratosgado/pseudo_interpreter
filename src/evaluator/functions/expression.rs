@@ -36,7 +36,7 @@ impl EvalExpression for Evaluator {
                         EvalResult::Number(val) => val as usize,
                         _ => panic!("invalid indexing of array"),
                     };
-                    array.get(index).unwrap().clone()
+                    array.get(index).expect("Subscript out of range").clone()
                 } else {
                     panic!("undefined array variable: {}", var)
                 }

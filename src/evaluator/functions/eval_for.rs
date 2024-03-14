@@ -21,7 +21,7 @@ impl EvalFor for Evaluator {
             let step = self.evaluate_expr(step);
             self.symbol_table.insert(var.clone(), start);
             while let Some(value) = self.symbol_table.get(&var) {
-                if value < &end {
+                if value <= &end {
                     for statement in fstatement.iter() {
                         self.evaluate_statement(statement);
                     }
