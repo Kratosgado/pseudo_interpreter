@@ -1,12 +1,11 @@
+use super::super::{Arithmetics, Comparison, EvalResult, Expr};
 use crate::Evaluator;
-use super::super::{Expr, EvalResult, Arithmetics, Comparison};
 
 pub trait EvalExpression {
     fn evaluate_expr(&self, expr: &Expr) -> EvalResult;
 }
 
 impl EvalExpression for Evaluator {
-    
     /// Evaluates an expression and returns the result.
     ///
     /// # Panics
@@ -29,7 +28,7 @@ impl EvalExpression for Evaluator {
             }
             Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
             Expr::Boolean(val) => EvalResult::Boolean(*val),
-            Expr::Comparison(left, op, right  ) => self.evaluate_comparison(left, op, right),
+            Expr::Comparison(left, op, right) => self.evaluate_comparison(left, op, right),
             Expr::ArrayVariable(var, index) => {
                 if let Some(array) = self.array_table.get(var) {
                     let index = match self.evaluate_expr(&index) {
@@ -40,8 +39,9 @@ impl EvalExpression for Evaluator {
                 } else {
                     panic!("undefined array variable: {}", var)
                 }
-            },
+            }
+            Expr::Param(_) => todo!("evaluator for parameters not implemented"),
+            Expr::FunctionCall(_) => todo!("evaluator for function call not implemented"),
         }
     }
-
 }

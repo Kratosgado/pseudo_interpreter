@@ -1,4 +1,6 @@
 
+use crate::evaluator::EvalFunction;
+
 use super::super::{
     evaluator::Evaluator, EvalExpression, EvalFor, EvalIf, EvalResult, EvalWhile, Statement, EvalArray
 };
@@ -34,6 +36,7 @@ impl EvalStatement for Evaluator {
                 self.symbol_table.insert(var.clone(), value);
             }
             Statement::AssignArray(_, _, _) => self.eval_array(statement),
+            Statement::Function(_, _, _, _) => self.eval_function(statement),
         }
     }
 }

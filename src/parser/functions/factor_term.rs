@@ -59,6 +59,20 @@ impl ParseFactorTerm for Parser {
             }
             Some(Token::Ident(var)) => {
                 self.next_token();
+                if let Some(Token::LParen) = self.current_token {
+                    self.next_token();
+                    let mut args: Vec<Expr> = Vec::new();
+                    while let Some(token ) = &self.current_token {
+                        match token {
+                            Token::RParen => {
+                                self.next_token();
+                                break;
+                            }
+                            _ => args.push(self.parse_expr())
+                        }
+                    }
+                    Expr::FunctionCall(args);
+                }
                 Expr::Variable(var)
             }
             Some(Token::Boolean(value)) => {
