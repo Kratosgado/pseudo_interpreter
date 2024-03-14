@@ -7,6 +7,7 @@ pub struct Evaluator {
     pub current_statement: Option<Statement>,
     position: usize,
     pub symbol_table: HashMap<String, EvalResult>,
+    pub array_table: HashMap<String, Vec<EvalResult>>
 }
 
 impl Evaluator {
@@ -16,6 +17,7 @@ impl Evaluator {
             current_statement: None,
             position: 0,
             symbol_table: HashMap::new(),
+            array_table: HashMap::new(),
         };
         evaluator.next_statement();
         evaluator

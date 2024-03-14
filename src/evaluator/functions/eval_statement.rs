@@ -1,6 +1,6 @@
-use super::{
-    super::{evaluator::Evaluator, EvalExpression,EvalFor, EvalIf, EvalWhile, EvalResult, Statement},
-    
+
+use super::super::{
+    evaluator::Evaluator, EvalExpression, EvalFor, EvalIf, EvalResult, EvalWhile, Statement, EvalArray
 };
 pub trait EvalStatement {
     fn evaluate_statement(&mut self, statement: &Statement);
@@ -32,7 +32,8 @@ impl EvalStatement for Evaluator {
                 std::io::stdin().read_line(&mut input).unwrap();
                 let value = EvalResult::Str(input.trim().to_string());
                 self.symbol_table.insert(var.clone(), value);
-            },
+            }
+            Statement::AssignArray(_, _, _) => self.eval_array(statement),
         }
     }
 }

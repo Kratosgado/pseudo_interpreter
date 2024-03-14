@@ -1,4 +1,4 @@
-use super::super::Token;
+use super::{super::Token, datatypes::Datatype};
 use crate::lexer::lexer::Lexer;
 
 pub trait Identifier {
@@ -8,11 +8,21 @@ pub trait Identifier {
 impl<'a> Identifier for Lexer<'a> {
     fn encode_identifier(&mut self) -> Token {
         let mut id = String::new();
-
+        let mut size: Token = Token::Null;
         while let Some(ch) = self.current_char {
             match ch {
                 'a'..='z' | 'A'..='Z' | '0'..='9' | '_' => {
                     id.push(ch);
+                    self.next_char();
+                }
+                '[' => {
+                    self.next_char();
+                    size = self.number();
+                }
+                ']' => {
+                    self.next_char();
+                }
+                '\t' | '\n' => {
                     self.next_char();
                 }
                 _ => break,
@@ -34,7 +44,7 @@ impl<'a> Identifier for Lexer<'a> {
             "then" => Token::Then,
             "endif" => Token::EndIf,
             "else" => Token::Else,
-            
+
             // loop
             "do" => Token::Do,
             "while" => Token::While,
@@ -50,7 +60,13 @@ impl<'a> Identifier for Lexer<'a> {
             "continue" => Token::Continue,
             "break" => Token::Break,
 
-            _ => Token::Ident(id),
+            _ => {
+                if size != Token::Null {
+                    Token::Array(id, Box::new(size))
+                } else {
+                    Token::Ident(id)
+                }
+            }
         }
     }
 }

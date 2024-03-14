@@ -9,6 +9,7 @@ mod functions {
      pub mod parse_while;
      pub mod parse_for;
      pub mod parse_input;
+     pub mod  parse_array;
 }
 
 pub use parser::Parser;
@@ -28,4 +29,5 @@ pub use functions::{
      parse_while::ParseWhile,
      parse_for::ParseFor,
      parse_input::ParseInput,
+     parse_array::ParseArray,
 };

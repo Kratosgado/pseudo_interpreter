@@ -6,7 +6,10 @@ pub enum Statement {
     Assignment(String, Expr),
     Print(Expr),
     Input(String),
-    
+
+    // array
+    AssignArray(String, Expr, Box<Vec<Expr>>),
+        
     // Add more variants as needed
     If( Expr, Box<Vec<Statement>>,Option<Box<Vec<Statement>>>),
     While(Expr, Box<Vec<Statement>>),
