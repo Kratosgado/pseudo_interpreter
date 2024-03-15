@@ -1,8 +1,9 @@
-use crate::{evaluator::Statement, Evaluator};
+use crate::{
+    evaluator::{EvalStatement, Statement},
+    Evaluator,
+};
 
-use super::super::{EvalExpression, EvalResult, EvalStatement};
-
-
+use super::super::{EvalExpression, EvalResult};
 
 pub trait EvalWhile {
     fn eval_while(&mut self, statement: &Statement);
@@ -14,11 +15,13 @@ impl EvalWhile for Evaluator {
             // let mut condition = self.evaluate_expr(condition);
             while let EvalResult::Boolean(true) = self.evaluate_expr(condition) {
                 for statement in wstatements.iter() {
-                    self.evaluate_statement(statement);
+                    self.eval_not_next_statement(statement);
                 }
                 // condition = self.evaluate_expr(condition);
             }
-            
+            self.next_statement();
         }
     }
+
+   
 }
