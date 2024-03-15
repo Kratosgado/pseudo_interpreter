@@ -10,6 +10,7 @@ mod functions {
     pub mod expression;
     pub mod eval_array;
     pub mod  eval_function;
+    pub mod func_call;
 }
 
 pub use eval_result::EvalResult;
@@ -19,5 +20,5 @@ pub use super::lexer::enums::{expr::Expr, operator::Operator, statement::Stateme
 pub use functions::{
     arithmetics::Arithmetics, comparison::Comparison, eval_for::EvalFor, eval_if::EvalIf,
     eval_statement::EvalStatement, eval_while::EvalWhile, expression::EvalExpression,
-    eval_array::EvalArray, eval_function::EvalFunction,
+    eval_array::EvalArray, eval_function::EvalFunction, func_call::CallFunc,
 };

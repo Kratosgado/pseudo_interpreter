@@ -1,5 +1,4 @@
-use super::super::{Arithmetics, Comparison, EvalResult, Expr};
-use crate::Evaluator;
+use super::super::{Arithmetics, CallFunc, Comparison, EvalResult, Evaluator, Expr};
 
 pub trait EvalExpression {
     fn evaluate_expr(&self, expr: &Expr) -> EvalResult;
@@ -41,7 +40,7 @@ impl EvalExpression for Evaluator {
                 }
             }
             Expr::Param(_) => todo!("evaluator for parameters not implemented"),
-            Expr::FunctionCall(_, _) => todo!("evaluator for function call not implemented"),
+            Expr::FunctionCall(name, args) => self.call_func(name, args),
         }
     }
 }
