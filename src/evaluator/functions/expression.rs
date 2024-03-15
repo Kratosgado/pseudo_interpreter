@@ -41,7 +41,7 @@ impl EvalExpression for Evaluator {
                 }
             }
             Expr::Param(_) => todo!("evaluator for parameters not implemented"),
-            Expr::FunctionCall(_) => todo!("evaluator for function call not implemented"),
+            Expr::FunctionCall(_, _) => todo!("evaluator for function call not implemented"),
         }
     }
 }

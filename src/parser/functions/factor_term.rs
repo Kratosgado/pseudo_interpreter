@@ -71,9 +71,10 @@ impl ParseFactorTerm for Parser {
                             _ => args.push(self.parse_expr())
                         }
                     }
-                    Expr::FunctionCall(args);
+                    Expr::FunctionCall(var, args)
+                }else {
+                    Expr::Variable(var)
                 }
-                Expr::Variable(var)
             }
             Some(Token::Boolean(value)) => {
                 self.next_token();
