@@ -25,12 +25,13 @@ impl CallFunc for Evaluator {
                 self.eval_not_next_statement(statement);
             }
             match func.ret_ment {
-                Some(expr) => self.evaluate_expr(&expr),
+                Some(expr) => {
+                    self.evaluate_expr(&expr)
+                },
                 None => todo!("function without return statement not implemented"),
             }
         } else {
             panic!("function {} not defined", name)
         }
-        self.next_statement();
     }
 }
