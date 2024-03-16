@@ -1,4 +1,4 @@
-use super::{ ParseToken, Statement, Token};
+use super::{ParseToken, Statement, Token};
 pub struct Parser {
     tokens: Vec<Token>,
     pub current_token: Option<Token>,
@@ -8,7 +8,6 @@ pub struct Parser {
 
 impl Parser {
     pub fn new(tokens: Vec<Token>) -> Self {
-        println!("tokens len: {}", tokens.len());
         let mut parser = Parser {
             tokens,
             current_token: None,
@@ -29,7 +28,7 @@ impl Parser {
     }
 
     pub fn parse(&mut self) -> Vec<Statement> {
-        let statements =  self.parse_token();
+        let statements = self.parse_token();
         statements
     }
 }

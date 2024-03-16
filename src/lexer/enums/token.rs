@@ -4,9 +4,12 @@ pub enum Token {
     Number(i64),
     Str(String),
     Boolean(bool),
+    Null,
 
     // variable
     Variable,
+    Array(String, Box<Token>),
+    
 
     // arithmen tokens
     Plus,
@@ -14,8 +17,14 @@ pub enum Token {
     Multiply,
     Divide,
     Modulo,
+
+    // brackets and parenthesis
     LParen,
     RParen,
+    LBracket,
+    RBracket,
+    LCurly,
+    RCurly,
 
     // statement tokens
     Let,

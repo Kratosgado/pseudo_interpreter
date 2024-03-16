@@ -65,6 +65,18 @@ impl ParseFactorTerm for Parser {
                 self.next_token();
                 Expr::Boolean(value)
             }
+            Some(Token::Array(var, index)) => {
+                self.next_token();
+                let index = if let Token::Number(val) = index.as_ref() {
+                    Expr::Number(*val)
+                } else if let Token::Ident(var) = index.as_ref() {
+                    Expr::Variable(var.clone())
+                }
+                else  {
+                    panic!("Invalid array index")
+                };
+                Expr::ArrayVariable(var, Box::new(index))
+            }
             Some(token) => todo!("Implement parsing of {:?}", token),
             None => panic!("Expected a token"),
         }

@@ -7,6 +7,7 @@ pub enum Expr {
     Str(String),
     Boolean(bool),
     Variable(String),
+    ArrayVariable(String, Box<Expr>),
 
     // comparison
     Comparison(Box<Expr>, Operator, Box<Expr>),

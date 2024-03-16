@@ -1,7 +1,7 @@
-use crate::parser::ParseInput;
+use crate::parser::{ParseArray, ParseInput};
 
 use super::super::{
-    ParseAssignment, ParseIf, ParsePrintExpr, ParseWhile, Parser, Statement, Token,ParseFor
+    ParseAssignment, ParseFor, ParseIf, ParsePrintExpr, ParseWhile, Parser, Statement, Token,
 };
 pub trait ParseToken {
     fn parse_token(&mut self) -> Vec<Statement>;
@@ -15,6 +15,7 @@ impl ParseToken for Parser {
                 Token::Print => statements.push(self.parse_print()),
                 Token::Input => statements.push(self.parse_input()),
                 Token::Ident(_) => statements.push(self.parse_assignment()),
+                Token::Array(_, _) => statements.push(self.parse_array()),
                 Token::While => statements.push(self.parse_while()),
                 Token::If => statements.push(self.parse_if()),
                 Token::For => statements.push(self.parse_for()),

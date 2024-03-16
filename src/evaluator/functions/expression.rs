@@ -30,6 +30,17 @@ impl EvalExpression for Evaluator {
             Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
             Expr::Boolean(val) => EvalResult::Boolean(*val),
             Expr::Comparison(left, op, right  ) => self.evaluate_comparison(left, op, right),
+            Expr::ArrayVariable(var, index) => {
+                if let Some(array) = self.array_table.get(var) {
+                    let index = match self.evaluate_expr(&index) {
+                        EvalResult::Number(val) => val as usize,
+                        _ => panic!("invalid indexing of array"),
+                    };
+                    array.get(index).expect("Subscript out of range").clone()
+                } else {
+                    panic!("undefined array variable: {}", var)
+                }
+            },
         }
     }
 
