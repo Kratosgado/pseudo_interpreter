@@ -9,6 +9,9 @@ pub enum Expr {
     Variable(String),
     ArrayVariable(String, Box<Expr>),
 
+    Param(String),
+    FunctionCall(String, Vec<Expr>),
+
     // comparison
     Comparison(Box<Expr>, Operator, Box<Expr>),
 }

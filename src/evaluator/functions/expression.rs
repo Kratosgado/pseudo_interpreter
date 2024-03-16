@@ -1,12 +1,10 @@
-use crate::Evaluator;
-use super::super::{Expr, EvalResult, Arithmetics, Comparison};
+use super::super::{Arithmetics, CallFunc, Comparison, EvalResult, Evaluator, Expr};
 
 pub trait EvalExpression {
-    fn evaluate_expr(&self, expr: &Expr) -> EvalResult;
+    fn evaluate_expr(&mut self, expr: &Expr) -> EvalResult;
 }
 
 impl EvalExpression for Evaluator {
-    
     /// Evaluates an expression and returns the result.
     ///
     /// # Panics
@@ -16,7 +14,7 @@ impl EvalExpression for Evaluator {
     /// # Errors
     ///
     /// This function will return an error if .
-    fn evaluate_expr(&self, expr: &Expr) -> EvalResult {
+    fn evaluate_expr(&mut self, expr: &Expr) -> EvalResult {
         match expr {
             Expr::Number(num) => EvalResult::Number(*num),
             Expr::Str(value) => EvalResult::Str(value.clone()),
@@ -29,9 +27,9 @@ impl EvalExpression for Evaluator {
             }
             Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
             Expr::Boolean(val) => EvalResult::Boolean(*val),
-            Expr::Comparison(left, op, right  ) => self.evaluate_comparison(left, op, right),
+            Expr::Comparison(left, op, right) => self.evaluate_comparison(left, op, right),
             Expr::ArrayVariable(var, index) => {
-                if let Some(array) = self.array_table.get(var) {
+                if let Some(array) = self.array_table.get(var).cloned() {
                     let index = match self.evaluate_expr(&index) {
                         EvalResult::Number(val) => val as usize,
                         _ => panic!("invalid indexing of array"),
@@ -40,8 +38,9 @@ impl EvalExpression for Evaluator {
                 } else {
                     panic!("undefined array variable: {}", var)
                 }
-            },
+            }
+            Expr::Param(_) => todo!("evaluator for parameters not implemented"),
+            Expr::FunctionCall(name, args) => self.call_func(name, args),
         }
     }
-
 }

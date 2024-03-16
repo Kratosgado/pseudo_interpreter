@@ -10,8 +10,9 @@ pub enum Statement {
     // array
     AssignArray(String, Expr, Box<Vec<Expr>>),
         
-    // Add more variants as needed
     If( Expr, Box<Vec<Statement>>,Option<Box<Vec<Statement>>>),
     While(Expr, Box<Vec<Statement>>),
     For(Expr, Option<Expr>, Expr, Expr, Box<Vec<Statement>>),
+
+    Function(String,Vec<Expr>, Box<Vec<Statement>>, Option<Expr>),
 }
