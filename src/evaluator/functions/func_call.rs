@@ -1,4 +1,3 @@
-use crate::lexer::enums::token::Token;
 
 use super::super::{EvalExpression, EvalResult, EvalStatement, Evaluator, Expr};
 
