@@ -1,3 +1,5 @@
+use crate::parser::ParseArray;
+
 use super::super::{
     Expr, ParseAssignment, ParseIf, ParsePrintExpr, ParseWhile, Parser, Statement, Token,
 };
@@ -35,6 +37,7 @@ impl ParseFor for Parser {
                         Token::While => fstatement.push(self.parse_while()),
                         Token::If => fstatement.push(self.parse_if()),
                         Token::For => fstatement.push(self.parse_for()),
+                        Token::Array(_,_) => fstatement.push(self.parse_array()),
                         Token::EOL => self.next_token(),
                         Token::EOF => break,
                         Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {

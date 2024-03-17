@@ -7,7 +7,7 @@ pub enum EvalResult {
     Number(i64),
     Str(String),
     Boolean(bool),
-    // None,
+    Null
 }
 
 trait Operation {
@@ -102,6 +102,7 @@ impl fmt::Display for EvalResult {
             EvalResult::Number(n) => write!(f, "{}", n),
             EvalResult::Str(s) => write!(f, "{}", s),
             EvalResult::Boolean(b) => write!(f, "{}", b),
+            EvalResult::Null => write!(f, "null")
             // EvalResult::None => write!(f, "None"),
         }
     }

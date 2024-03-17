@@ -9,6 +9,8 @@ pub enum Statement {
 
     // array
     AssignArray(String, Expr, Box<Vec<Expr>>),
+    DeclareArray(String, Expr),
+    AssignIndex(String, Expr, Expr),
         
     If( Expr, Box<Vec<Statement>>,Option<Box<Vec<Statement>>>),
     While(Expr, Box<Vec<Statement>>),

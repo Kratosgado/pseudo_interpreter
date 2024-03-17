@@ -37,5 +37,6 @@ impl EvalFor for Evaluator {
                 }
             }
         }
+        self.next_statement();
     }
 }

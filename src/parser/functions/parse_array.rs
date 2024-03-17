@@ -9,31 +9,36 @@ pub trait ParseArray {
 impl ParseArray for Parser {
     fn parse_array(&mut self) -> Statement {
         if let Some(Token::Array(var, size)) = self.current_token.clone() {
-            let size = if let Token::Number(val) = size.as_ref() {
-                *val
-            } else {
-                panic!("Invalid array size")
+            let size = match size.as_ref() {
+                Token::Number(val) => Expr::Number(*val),
+                Token::Ident(var) => Expr::Variable(var.clone()),
+                _ => panic!("Invalid array size"),
             };
             self.next_token();
             if let Some(Token::Assign) = &self.current_token {
                 self.next_token();
-                let mut indices = Vec::new();
-                self.next_token();
-                while let Some(token) = &self.current_token {
-                    match token {
-                        Token::Number(_) => indices.push(self.parse_expr()),
-                        Token::Str(_) => indices.push(self.parse_expr()),
-                        Token::Boolean(_) => indices.push(self.parse_expr()),
-                        Token::RBracket => {
-                            self.next_token();
-                            break;
+                if let Some(Token::LBracket) = &self.current_token {
+                    let mut indices = Vec::new();
+                    self.next_token();
+                    while let Some(token) = &self.current_token {
+                        match token {
+                            Token::Number(_) => indices.push(self.parse_expr()),
+                            Token::Str(_) => indices.push(self.parse_expr()),
+                            Token::Boolean(_) => indices.push(self.parse_expr()),
+                            Token::Ident(_) => indices.push(self.parse_expr()),
+                            Token::RBracket => {
+                                self.next_token();
+                                break;
+                            }
+                            _ => panic!("Invalid array value"),
                         }
-                        _ => panic!("Invalid array value"),
                     }
+                    Statement::AssignArray(var.clone(), size, Box::new(indices))
+                } else {
+                    Statement::AssignIndex(var.clone(), size, self.parse_expr())
                 }
-                Statement::AssignArray(var.clone(), Expr::Number(size), Box::new(indices))
             } else {
-                panic!("Invalid array assignment")
+                Statement::DeclareArray(var.clone(), size)
             }
         } else {
             panic!("Invalid array declaration")
