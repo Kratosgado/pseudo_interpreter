@@ -1,4 +1,4 @@
-use super::super::{ParsePrintExpr, Statement, Token, Parser};
+use super::super::{ParsePrintExpr, Statement,Expr, Token, Parser};
 
 pub trait ParseAssignment {
     fn parse_assignment(&mut self) -> Statement;
@@ -14,7 +14,21 @@ impl ParseAssignment for Parser {
                     self.next_token();
                     let expr = self.parse_expr();
                     Statement::Assignment(var, expr)
-                } else {
+                }else if let Some(Token::LParen) = self.current_token {
+                    self.next_token();
+                    let mut args: Vec<Expr> = Vec::new();
+                    while let Some(token ) = &self.current_token {
+                        match token {
+                            Token::RParen => {
+                                self.next_token();
+                                break;
+                            }
+                            _ => args.push(self.parse_expr())
+                        }
+                    }
+                    Statement::Expr(Expr::FunctionCall(var, args))
+                }
+                 else {
                     panic!("Expected assignment operator");
                 }
             }
