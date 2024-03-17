@@ -1,8 +1,8 @@
-
 use crate::evaluator::EvalFunction;
 
 use super::super::{
-    evaluator::Evaluator, EvalExpression, EvalFor, EvalIf, EvalResult, EvalWhile, Statement, EvalArray
+    evaluator::Evaluator, EvalArray, EvalExpression, EvalFor, EvalIf, EvalResult, EvalWhile,
+    Statement,
 };
 pub trait EvalStatement {
     fn eval_not_next_statement(&mut self, statement: &Statement);
@@ -38,6 +38,8 @@ impl EvalStatement for Evaluator {
             }
             Statement::AssignArray(_, _, _) => self.eval_array(statement),
             Statement::Function(_, _, _, _) => self.eval_function(statement),
+            Statement::DeclareArray(_, _) => unimplemented!("Declare array not implemented"),
+            Statement::AssignIndex(_, _, _) => unimplemented!("Assign index not implemented"),
         }
     }
 
@@ -65,6 +67,8 @@ impl EvalStatement for Evaluator {
             }
             Statement::AssignArray(_, _, _) => self.eval_array(statement),
             Statement::Function(_, _, _, _) => self.eval_function(statement),
+            Statement::DeclareArray(_, _) => unimplemented!("Declare array not implemented"),
+            Statement::AssignIndex(_, _, _) => unimplemented!("Assign index not implemented"),
         }
     }
 }
