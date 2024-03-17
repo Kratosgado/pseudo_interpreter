@@ -4,11 +4,11 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Prince Mbeah Essilfie <mbeahessilfieprince@gmail.com>"]
 license = "MIT OR Apache-2.0"
-description = "A tool to git status automation"
+description = "A Pseudocode interpreter"
 readme = "README.md"
 homepage = "https://github.com/Kratosgado/pseudo_interpreter"
 repository = "https://github.com/Kratosgado/pseudo_interpreter"
-keywords = ["interpreter", "programming language", "pseudocode", "system design"]
+keywords = ["interpreter", "pseudocode", "system design"]
 categories = ["Development tools", "Programming language"]
 
 
