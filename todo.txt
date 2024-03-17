@@ -1,5 +1,6 @@
 known bugs:
     separating array declaration from definition
+    function with no arguments
     
 to be implemented:
     disallow naming variables with keywords
