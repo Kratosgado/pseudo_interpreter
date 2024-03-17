@@ -36,10 +36,12 @@ impl EvalStatement for Evaluator {
                 let value = EvalResult::Str(input.trim().to_string());
                 self.symbol_table.insert(var.clone(), value);
             }
-            Statement::AssignArray(_, _, _) => self.eval_array(statement),
+            Statement::AssignArray(_, _, _)
+            | Statement::AssignIndex(_, _, _)
+            | Statement::DeclareArray(_, _) =>{
+                self.eval_array(statement);
+            },
             Statement::Function(_, _, _, _) => self.eval_function(statement),
-            Statement::DeclareArray(_, _) => unimplemented!("Declare array not implemented"),
-            Statement::AssignIndex(_, _, _) => unimplemented!("Assign index not implemented"),
         }
     }
 
