@@ -25,6 +25,7 @@ impl ParseToken for Parser {
                 Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
                     statements.push(Statement::Expr(self.parse_expr()))
                 }
+                Token::RParen => self.next_token(),
                 _ => panic!("Unexpected token: {:?}", token),
             }
         }

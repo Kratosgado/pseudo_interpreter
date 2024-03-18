@@ -61,17 +61,17 @@ impl ParseFactorTerm for Parser {
                 self.next_token();
                 if let Some(Token::LParen) = self.current_token {
                     self.next_token();
-                    let mut args: Vec<Expr> = Vec::new();
-                    while let Some(token ) = &self.current_token {
-                        match token {
-                            Token::RParen => {
-                                self.next_token();
-                                break;
-                            }
-                            _ => args.push(self.parse_expr())
-                        }
-                    }
-                    Expr::FunctionCall(var, args)
+                    let args = self.parse_expr();
+                    // while let Some(token ) = &self.current_token {
+                    //     match token {
+                    //         Token::RParen => {
+                    //             self.next_token();
+                    //             break;
+                    //         }
+                    //         _ => args.push(self.parse_expr())
+                    //     }
+                    // }
+                    Expr::FunctionCall(var, Box::new(args))
                 }else {
                     Expr::Variable(var)
                 }

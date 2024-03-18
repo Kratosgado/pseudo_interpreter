@@ -21,6 +21,7 @@ impl ParseFunction for Parser {
                             params.push(Expr::Param(param.clone()));
                             self.next_token();
                         }
+                        Some(Token::Comma) => self.next_token(),
                         _ => todo!("Invalid  function parameter"),
                     }
                 }

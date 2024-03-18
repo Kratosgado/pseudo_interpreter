@@ -95,7 +95,7 @@ impl EvalStatement for Evaluator {
 }
 
 /// recursive function to evaluate multi expressions
-fn destruct_multi(expr: &Expr) -> Vec<Expr> {
+pub fn destruct_multi(expr: &Expr) -> Vec<Expr> {
     match expr {
         Expr::Multi(exprs) => {
             let mut result = Vec::new();

@@ -13,7 +13,7 @@ pub enum Expr {
     Multi(Vec<Expr>),
 
     Param(String),
-    FunctionCall(String, Vec<Expr>),
+    FunctionCall(String, Box<Expr>),
 
     // comparison
     Comparison(Box<Expr>, Operator, Box<Expr>),

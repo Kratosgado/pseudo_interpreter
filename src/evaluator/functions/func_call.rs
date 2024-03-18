@@ -1,12 +1,13 @@
-use super::super::{EvalExpression, EvalResult, EvalStatement, Evaluator, Expr};
+use super::{super::{EvalExpression, EvalResult, EvalStatement, Evaluator, Expr}, eval_statement::destruct_multi};
 
 pub trait CallFunc {
-    fn call_func(&mut self, name: &String, args: &Vec<Expr>) -> EvalResult;
+    fn call_func(&mut self, name: &String, args: &Expr) -> EvalResult;
 }
 
 impl CallFunc for Evaluator {
-    fn call_func(&mut self, name: &String, args: &Vec<Expr>) -> EvalResult {
+    fn call_func(&mut self, name: &String, args: &Expr) -> EvalResult {
         if let Some(func) = self.function_args.get(name).cloned() {
+            let args = destruct_multi(args);
             if func.params.len() != args.len() {
                 panic!("function arguments not matching")
             }
