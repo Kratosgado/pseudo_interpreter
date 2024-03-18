@@ -27,7 +27,7 @@ impl<'a> Identifier for Lexer<'a> {
                         }
                     }
                 }
-               ']' | '\t' | '\n' => {
+                ']' | '\t' | '\n' => {
                     self.next_char();
                     break;
                 }
@@ -36,7 +36,7 @@ impl<'a> Identifier for Lexer<'a> {
         }
         match id.to_lowercase().as_str() {
             "print" | "output" | "display" => Token::Print,
-            "input" | "get" | "read" | "recieve" => Token::Input,
+            "input" | "get" | "read" | "receive" => Token::Input,
             "true" => Token::Boolean(true),
             "false" => Token::Boolean(false),
 

@@ -1,7 +1,7 @@
 use crate::evaluator::EvalFunction;
 
 use super::super::{
-    evaluator::Evaluator, EvalArray, EvalExpression, EvalFor, EvalIf, EvalResult, EvalWhile,
+    evaluator::Evaluator, EvalArray, EvalExpression, EvalFor, EvalIf, EvalResult, EvalWhile, Expr,
     Statement,
 };
 pub trait EvalStatement {
@@ -17,9 +17,16 @@ impl EvalStatement for Evaluator {
                 self.evaluate_expr(expr);
             }
             Statement::Print(expr) => {
+                let exprs = destruct_multi(expr);
+                if exprs.is_empty() {
+                    println!("{}", self.evaluate_expr(expr));
+                } else {
+                    for expr in exprs {
+                        print!("{}   ", self.evaluate_expr(&expr));
+                    }
+                    println!();
+                }
                 self.next_statement();
-                let value = self.evaluate_expr(expr);
-                println!("{}", value);
             }
             Statement::Assignment(var, expr) => {
                 self.next_statement();
@@ -38,10 +45,16 @@ impl EvalStatement for Evaluator {
             }
             Statement::AssignArray(_, _, _)
             | Statement::AssignIndex(_, _, _)
-            | Statement::DeclareArray(_, _) =>{
+            | Statement::DeclareArray(_, _) => {
                 self.eval_array(statement);
-            },
+            }
             Statement::Function(_, _, _, _) => self.eval_function(statement),
+            Statement::PrintMulti(exprs) => {
+                for expr in exprs {
+                    print!("{}\t", self.evaluate_expr(expr))
+                }
+                self.next_statement();
+            }
         }
     }
 
@@ -71,6 +84,26 @@ impl EvalStatement for Evaluator {
             Statement::Function(_, _, _, _) => self.eval_function(statement),
             Statement::DeclareArray(_, _) => unimplemented!("Declare array not implemented"),
             Statement::AssignIndex(_, _, _) => unimplemented!("Assign index not implemented"),
+            Statement::PrintMulti(exprs) => {
+                for expr in exprs {
+                    print!("{}\t", self.evaluate_expr(expr))
+                }
+                self.next_statement();
+            }
         }
+    }
+}
+
+/// recursive function to evaluate multi expressions
+fn destruct_multi(expr: &Expr) -> Vec<Expr> {
+    match expr {
+        Expr::Multi(exprs) => {
+            let mut result = Vec::new();
+            for expr in exprs {
+                result.append(&mut destruct_multi(expr));
+            }
+            result
+        }
+        _ => vec![expr.clone()],
     }
 }

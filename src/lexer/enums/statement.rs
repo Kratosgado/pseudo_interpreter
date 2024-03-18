@@ -5,6 +5,7 @@ pub enum Statement {
     Expr(Expr),
     Assignment(String, Expr),
     Print(Expr),
+    PrintMulti(Vec<Expr>),
     Input(String),
 
     // array

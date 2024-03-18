@@ -69,4 +69,6 @@ pub enum Token {
     Return,
     Continue,
     Break,
+
+    Comma,
 }

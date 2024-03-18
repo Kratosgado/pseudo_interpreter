@@ -9,6 +9,9 @@ pub enum Expr {
     Variable(String),
     ArrayVariable(String, Box<Expr>),
 
+    // multi 
+    Multi(Vec<Expr>),
+
     Param(String),
     FunctionCall(String, Vec<Expr>),
 

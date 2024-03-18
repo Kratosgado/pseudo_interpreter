@@ -32,6 +32,10 @@ impl<'a> Lexer<'a> {
                 'a'..='z' | 'A'..='Z' | '_' => tokens.push(self.encode_identifier()),
                 '+' | '-' | '*' | '/' | '%' | '(' | ')' => tokens.push(self.encode_operator()),
                 '<' | '>' | '!' | '=' | '&' | '|' => tokens.push(self.encode_comparison()),
+                ',' => {
+                    self.next_char();
+                    tokens.push(Token::Comma);
+                },
                 '[' => {
                     self.next_char();
                     tokens.push(Token::LBracket);
@@ -44,7 +48,7 @@ impl<'a> Lexer<'a> {
                     tokens.push(Token::EOL);
                     self.next_char();
                 }
-                ' ' | '\t' | '\r' | ',' => self.next_char(),
+                ' ' | '\t' | '\r' => self.next_char(),
                 '"' => tokens.push(self.string()),
                 _ => panic!("Invalid character: {}", ch),
             }

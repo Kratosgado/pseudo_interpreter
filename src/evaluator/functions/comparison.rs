@@ -1,30 +1,24 @@
-use super::super::{EvalResult, Expr, Operator, evaluator::Evaluator, EvalExpression};
+use crate::evaluator::eval_result::Operation;
 
+use super::super::{evaluator::Evaluator, EvalExpression, EvalResult, Expr, Operator};
 
 pub trait Comparison {
     fn evaluate_comparison(&mut self, left: &Expr, op: &Operator, right: &Expr) -> EvalResult;
 }
 
 impl Comparison for Evaluator {
-    
     fn evaluate_comparison(&mut self, left: &Expr, op: &Operator, right: &Expr) -> EvalResult {
-        let left_val = match self.evaluate_expr(left) {
-            EvalResult::Number(val) => val,
-            _ => panic!("Expected number"),
-        };
-        let right_val = match self.evaluate_expr(right) {
-            EvalResult::Number(val) => val,
-            _ => panic!("Expected a number"),
-        };
-        let result = match op {
-            Operator::Equal => left_val == right_val,
-            Operator::LessThan => left_val < right_val,
-            Operator::GreaterThan => left_val > right_val,
-            Operator::LessThanEqual => left_val <= right_val,
-            Operator::GreaterThanEqual => left_val >= right_val,
-            Operator::NotEqual => left_val != right_val,
+        let left_val = self.evaluate_expr(left);
+        let right_val = self.evaluate_expr(right);
+
+        match op {
+            Operator::Equal => left_val.equal(&right_val),
+            Operator::LessThan => left_val.less_than(&right_val),
+            Operator::GreaterThan => left_val.greater_than(&right_val),
+            Operator::LessThanEqual => left_val.less_or_equal(&right_val),
+            Operator::GreaterThanEqual => left_val.greater_or_equal(&right_val),
+            Operator::NotEqual => left_val.not_equal(&right_val),
             _ => panic!("Invalid comparison operator"),
-        };
-        EvalResult::Boolean(result)
+        }
     }
 }

@@ -41,6 +41,7 @@ impl EvalExpression for Evaluator {
             }
             Expr::Param(_) => todo!("evaluator for parameters not implemented"),
             Expr::FunctionCall(name, args) => self.call_func(name, args),
+            Expr::Multi(_) => unimplemented!("Multi expression not implemented"),
         }
     }
 }

@@ -1,16 +1,16 @@
-use std::fmt;
 use std::cmp::{PartialEq, PartialOrd};
-
+use std::fmt::{self, write};
 
 #[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum EvalResult {
     Number(i64),
     Str(String),
     Boolean(bool),
-    Null
+    Multi(Vec<EvalResult>),
+    Null,
 }
 
-trait Operation {
+pub trait Operation {
     fn add(&self, other: &Self) -> EvalResult;
     fn subtract(&self, other: &Self) -> EvalResult;
     fn multiply(&self, other: &Self) -> EvalResult;
@@ -19,9 +19,9 @@ trait Operation {
     fn greater_than(&self, other: &Self) -> EvalResult;
     fn less_than(&self, other: &Self) -> EvalResult;
     fn equal(&self, other: &Self) -> EvalResult;
+    fn not_equal(&self, other: &Self) -> EvalResult;
     fn greater_or_equal(&self, other: &Self) -> EvalResult;
     fn less_or_equal(&self, other: &Self) -> EvalResult;
-
 }
 
 impl Operation for EvalResult {
@@ -76,7 +76,7 @@ impl Operation for EvalResult {
     }
 
     fn greater_or_equal(&self, other: &EvalResult) -> EvalResult {
-        match (self, other ) {
+        match (self, other) {
             (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 >= n2),
             _ => panic!("Invalid operation"),
         }
@@ -85,6 +85,16 @@ impl Operation for EvalResult {
     fn equal(&self, other: &Self) -> EvalResult {
         match (self, other) {
             (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 == n2),
+            (EvalResult::Str(s1), EvalResult::Str(s2)) => EvalResult::Boolean(s1 == s2),
+            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => EvalResult::Boolean(b1 == b2),
+            _ => panic!("Invalid operation"),
+        }
+    }
+    fn not_equal(&self, other: &Self) -> EvalResult {
+        match (self, other) {
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 != n2),
+            (EvalResult::Str(s1), EvalResult::Str(s2)) => EvalResult::Boolean(s1 != s2),
+            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => EvalResult::Boolean(b1 != b2),
             _ => panic!("Invalid operation"),
         }
     }
@@ -102,8 +112,8 @@ impl fmt::Display for EvalResult {
             EvalResult::Number(n) => write!(f, "{}", n),
             EvalResult::Str(s) => write!(f, "{}", s),
             EvalResult::Boolean(b) => write!(f, "{}", b),
-            EvalResult::Null => write!(f, "null")
-            // EvalResult::None => write!(f, "None"),
+            EvalResult::Null => write!(f, "null"),
+            EvalResult::Multi(v) => write! (f, "{:?}", v ) // EvalResult::None => write!(f, "None"),
         }
     }
 }
