@@ -8,7 +8,7 @@ description = "A Pseudocode interpreter"
 readme = "README.md"
 homepage = "https://github.com/Kratosgado/pseudo_interpreter"
 repository = "https://github.com/Kratosgado/pseudo_interpreter"
-keywords = ["interpreter", "pseudocode", "system design"]
+keywords = ["interpreter", "pseudocode"]
 categories = ["Development tools", "Programming language"]
 
 
