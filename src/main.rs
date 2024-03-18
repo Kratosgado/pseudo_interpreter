@@ -14,7 +14,7 @@ fn main() {
         Ok(inputs) => {
             let mut lexer = Lexer::new(inputs);
             let tokens = lexer.tokenize();
-            println!("Tokens: {:?}", tokens);
+            // println!("Tokens: {:?}", tokens);
 
             let mut parser = Parser::new(tokens);
             let parsed_token = parser.parse();
@@ -22,7 +22,7 @@ fn main() {
 
             let mut evaluator = Evaluator::new(parsed_token);
             evaluator.evaluate();
-            // println!("execution done!");
+            println!("execution done!");
             std::process::exit(0);
         }
         Err(err) => {
