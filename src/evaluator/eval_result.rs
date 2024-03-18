@@ -1,5 +1,5 @@
 use std::cmp::{PartialEq, PartialOrd};
-use std::fmt::{self, write};
+use std::fmt::{self};
 
 #[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum EvalResult {

@@ -1,8 +1,5 @@
 known bugs:
-    separating array declaration from definition
-    array indexing
-    
-    
+
 to be implemented:
     disallow naming variables with keywords
     control structures:
