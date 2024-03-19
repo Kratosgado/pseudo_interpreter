@@ -1,6 +1,6 @@
 use crate::evaluator::{EvalExpression, EvalResult};
 
-use super::super::{Evaluator, Statement};
+use super::{super::{Evaluator, Statement}, eval_statement::destruct_multi};
 pub trait EvalArray {
     fn eval_array(&mut self, statement: &Statement);
 }
@@ -13,7 +13,8 @@ impl EvalArray for Evaluator {
 
                 // let size = self.evaluate_expr(size);
 
-                let mut arr_values = vec![];
+                let values = destruct_multi(values);
+                let mut arr_values = Vec::new();
                 for value in values.iter() {
                     arr_values.push(self.evaluate_expr(value))
                 }

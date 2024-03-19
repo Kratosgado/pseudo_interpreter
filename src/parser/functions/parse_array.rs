@@ -18,22 +18,10 @@ impl ParseArray for Parser {
             if let Some(Token::Assign) = &self.current_token {
                 self.next_token();
                 if let Some(Token::LBracket) = &self.current_token {
-                    let mut indices = Vec::new();
                     self.next_token();
-                    while let Some(token) = &self.current_token {
-                        match token {
-                            Token::Number(_) => indices.push(self.parse_expr()),
-                            Token::Str(_) => indices.push(self.parse_expr()),
-                            Token::Boolean(_) => indices.push(self.parse_expr()),
-                            Token::Ident(_) => indices.push(self.parse_expr()),
-                            Token::RBracket => {
-                                self.next_token();
-                                break;
-                            }
-                            _ => panic!("Invalid array value"),
-                        }
-                    }
-                    Statement::AssignArray(var.clone(), size, Box::new(indices))
+                    let indices = self.parse_expr();
+                    self.next_token();
+                    Statement::AssignArray(var.clone(), size, indices)
                 } else {
                     Statement::AssignIndex(var.clone(), size, self.parse_expr())
                 }

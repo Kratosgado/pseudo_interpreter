@@ -9,7 +9,7 @@ pub enum Statement {
     Input(String),
 
     // array
-    AssignArray(String, Expr, Box<Vec<Expr>>),
+    AssignArray(String, Expr, Expr),
     DeclareArray(String, Expr),
     AssignIndex(String, Expr, Expr),
         

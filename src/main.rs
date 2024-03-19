@@ -14,11 +14,11 @@ fn main() {
         Ok(inputs) => {
             let mut lexer = Lexer::new(inputs);
             let tokens = lexer.tokenize();
-            // println!("Tokens: {:?}", tokens);
+            println!("Tokens: {:?}", tokens);
 
             let mut parser = Parser::new(tokens);
             let parsed_token = parser.parse();
-            // println!("Parse tree: {:?}", parsed_token);
+            println!("Parse tree: {:?}", parsed_token);
 
             let mut evaluator = Evaluator::new(parsed_token);
             evaluator.evaluate();
