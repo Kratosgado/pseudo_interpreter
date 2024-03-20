@@ -17,6 +17,7 @@ impl EvalExpression for Evaluator {
     fn evaluate_expr(&mut self, expr: &Expr) -> EvalResult {
         match expr {
             Expr::Number(num) => EvalResult::Number(*num),
+            Expr::Float(num) => EvalResult::Double(*num),
             Expr::Str(value) => EvalResult::Str(value.clone()),
             Expr::Variable(var) => {
                 if let Some(value) = self.symbol_table.get(var) {

@@ -11,6 +11,7 @@ mod functions {
     pub mod parse_while;
     pub mod print_expr;
     pub mod token;
+    pub mod parse_declare;
 }
 
 pub use super::lexer::enums::{expr::Expr, operator::Operator, statement::Statement, token::Token};
@@ -18,6 +19,6 @@ pub use functions::{
     assignment::ParseAssignment, comparison::ParseComparison, factor_term::ParseFactorTerm,
     parse_array::ParseArray, parse_for::ParseFor, parse_function::ParseFunction, parse_if::ParseIf,
     parse_input::ParseInput, parse_while::ParseWhile, print_expr::ParsePrintExpr,
-    token::ParseToken,
+    token::ParseToken, parse_declare::ParseDeclare,
 };
 pub use parser::Parser;

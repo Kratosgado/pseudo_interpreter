@@ -10,15 +10,23 @@ pub trait Datatype{
 }
 
 impl<'a> Datatype for Lexer<'a> {
-    fn number( &mut self) -> Token {
-        let mut number = 0;
-        while let Some('0'..='9') = self.current_char {
-            number = number * 10 + self.current_char.unwrap().to_digit(10).unwrap() as i64;
-            self.next_char();
+    fn number(&mut self) -> Token {
+        let mut number = String::new();
+        while let Some(ch) = self.current_char {
+            match ch {
+                '0'..='9' | '.' => {
+                    number.push(ch);
+                    self.next_char();
+                },
+                _ => break,
+            }
         }
-        Token::Number(number)
+        if number.contains('.') {
+            Token::Float(number.parse().unwrap())
+        } else {
+            Token::Number(number.parse().unwrap())
+        }
     }
-
     /// catch strings
   fn string(&mut self) -> Token {
         let mut string = String::new();

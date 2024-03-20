@@ -1,4 +1,4 @@
-use crate::evaluator::EvalFunction;
+use crate::evaluator::{EvalDeclare, EvalFunction};
 
 use super::super::{
     evaluator::Evaluator, EvalArray, EvalExpression, EvalFor, EvalIf, EvalResult, EvalWhile, Expr,
@@ -31,6 +31,11 @@ impl EvalStatement for Evaluator {
             Statement::Assignment(var, expr) => {
                 self.next_statement();
                 let value = self.evaluate_expr(expr);
+                if let Some(val) = self.symbol_table.get(var) {
+                    if val.get_type() != value.get_type() {
+                        panic!("Type mismatch: {} is declared as {:?} but assigned {:?}", var, val.get_type(), value.get_type());
+                    }
+                }
                 self.symbol_table.insert(var.clone(), value);
             }
             Statement::If(_, _, _) => self.eval_if(statement),
@@ -55,6 +60,7 @@ impl EvalStatement for Evaluator {
                 }
                 self.next_statement();
             }
+            Statement::Declare(var, datatype) => self.eval_declare(var, datatype),
         }
     }
 
@@ -89,7 +95,9 @@ impl EvalStatement for Evaluator {
                     print!("{}\t", self.evaluate_expr(expr))
                 }
                 self.next_statement();
-            }
+            },
+            Statement::Declare(_, _) => unimplemented!(),
+
         }
     }
 }

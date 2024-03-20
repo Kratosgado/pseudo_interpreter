@@ -1,7 +1,8 @@
-use super::expr::Expr;
+use super::{expr::Expr, token::Token};
 
 #[derive(Debug, Clone)]
 pub enum Statement {
+    Declare(String, String),
     Expr(Expr),
     Assignment(String, Expr),
     Print(Expr),

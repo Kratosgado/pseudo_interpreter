@@ -1,7 +1,14 @@
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
+    Declare,
+    As,
+    Integer,
+    Double,
+    String,
+    Bool,
     // Datatype tokens
     Number(i64),
+    Float(f64),
     Str(String),
     Boolean(bool),
     Null,
@@ -9,7 +16,6 @@ pub enum Token {
     // variable
     Variable,
     Array(String, Box<Token>),
-    
 
     // arithmen tokens
     Plus,
@@ -17,6 +23,7 @@ pub enum Token {
     Multiply,
     Divide,
     Modulo,
+    FloorDivide,
 
     // brackets and parenthesis
     LParen,
@@ -52,8 +59,8 @@ pub enum Token {
     If,
     Else,
     EndIf,
-    Then, 
-    
+    Then,
+
     // loops
     Do,
     While,

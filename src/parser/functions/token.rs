@@ -1,7 +1,8 @@
 use crate::parser::{ParseArray, ParseFunction, ParseInput};
 
 use super::super::{
-    ParseAssignment, ParseFor, ParseIf, ParsePrintExpr, ParseWhile, Parser, Statement, Token,
+    ParseAssignment, ParseDeclare, ParseFor, ParseIf, ParsePrintExpr, ParseWhile, Parser,
+    Statement, Token,
 };
 pub trait ParseToken {
     fn parse_token(&mut self) -> Vec<Statement>;
@@ -25,6 +26,7 @@ impl ParseToken for Parser {
                 Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
                     statements.push(Statement::Expr(self.parse_expr()))
                 }
+                Token::Declare => statements.push(self.parse_declare()),
                 Token::RParen => self.next_token(),
                 _ => panic!("Unexpected token: {:?}", token),
             }

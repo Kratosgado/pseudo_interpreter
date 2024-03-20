@@ -42,6 +42,10 @@ impl ParseFactorTerm for Parser {
             Some(Token::Number(value)) => {
                 self.next_token();
                 Expr::Number(value)
+            },
+            Some(Token::Float(value)) => {
+                self.next_token();
+                Expr::Float(value)
             }
             Some(Token::LParen) => {
                 self.next_token();

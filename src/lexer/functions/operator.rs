@@ -22,7 +22,10 @@ impl <'a> Operator for Lexer<'a> {
             }
             Some('/') => {
                 self.next_char();
-                Token::Divide
+                if let Some('/') = self.current_char {
+                    return Token::FloorDivide
+                } 
+                return Token::Divide
             }
             Some('%') => {
                 self.next_char();

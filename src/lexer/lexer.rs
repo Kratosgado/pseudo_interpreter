@@ -36,6 +36,15 @@ impl<'a> Lexer<'a> {
                     self.next_char();
                     tokens.push(Token::Comma);
                 },
+                '#' => {
+                    self.next_char();
+                    while let Some(ch) = self.current_char {
+                        if ch == '\n' {
+                            break;
+                        }
+                        self.next_char();
+                    }
+                }
                 '[' => {
                     self.next_char();
                     tokens.push(Token::LBracket);
