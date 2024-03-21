@@ -1,3 +1,5 @@
+use crate::constants::error_handler::PseudoError;
+
 use super::{eval_result::EvalResult, EvalStatement, Expr, Statement};
 
 use std::collections::HashMap;
@@ -41,9 +43,10 @@ impl Evaluator {
         }
     }
 
-    pub fn evaluate(&mut self) {
+    pub fn evaluate(&mut self) -> Result<(), PseudoError> {
         while let Some(statement) = self.current_statement.take() {
-            self.evaluate_statement(&statement);
+             self.evaluate_statement(&statement)?;
         }
+        Ok(())
     }
 }

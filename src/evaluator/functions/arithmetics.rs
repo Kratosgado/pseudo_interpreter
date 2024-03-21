@@ -1,18 +1,18 @@
 use super::super::{EvalExpression, EvalResult, Expr, Operator};
-use crate::Evaluator;
+use crate::{constants::error_handler::PseudoError, Evaluator};
 
 pub trait Arithmetics {
-    fn arithmetic_expr(&mut self, left: &Expr, op: &Operator, right: &Expr) -> EvalResult;
+    fn arithmetic_expr(&mut self, left: &Expr, op: &Operator, right: &Expr) -> Result<EvalResult, PseudoError>;
 }
 
 impl Arithmetics for Evaluator {
-    fn arithmetic_expr(&mut self, left: &Expr, op: &Operator, right: &Expr) -> EvalResult {
-        let left_val = match self.evaluate_expr(left) {
+    fn arithmetic_expr(&mut self, left: &Expr, op: &Operator, right: &Expr) -> Result<EvalResult, PseudoError> {
+        let left_val: i64 = match self.evaluate_expr(left)? {
             EvalResult::Number(val) => val,
             EvalResult::Str(val) => val.parse().expect("Could not parse string to integer"),
-            _ => panic!("Expected number"),
+            _ => return Err(PseudoError::TypeError("Expected a number".to_string())),
         };
-        let right_val = match self.evaluate_expr(right) {
+        let right_val = match self.evaluate_expr(right)? {
             EvalResult::Number(val) => val,
             EvalResult::Str(val) => val.parse().expect("Could not parse string to integer"),
             _ => panic!("Expected a number"),
@@ -26,6 +26,6 @@ impl Arithmetics for Evaluator {
             Operator::Modulo => left_val % right_val,
             _ => panic!("Invalid arithmetic operator"),
         };
-        EvalResult::Number(result)
+        Ok(EvalResult::Number(result))
     }
 }

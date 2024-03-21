@@ -21,7 +21,7 @@ fn main() -> Result<(), PseudoError>{
             println!("Parse tree: {:?}", parsed_token); // Debug
 
             let mut evaluator = Evaluator::new(parsed_token);
-            evaluator.evaluate();
+            evaluator.evaluate()?;
             println!("execution done!");
             std::process::exit(0);
         }

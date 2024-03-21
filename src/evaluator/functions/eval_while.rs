@@ -1,25 +1,24 @@
 use crate::{
-    evaluator::{EvalStatement, Statement},
-    Evaluator,
+    constants::error_handler::PseudoError, evaluator::{EvalStatement, Statement}, Evaluator
 };
 
 use super::super::{EvalExpression, EvalResult};
 
 pub trait EvalWhile {
-    fn eval_while(&mut self, statement: &Statement);
+    fn eval_while(&mut self, statement: &Statement) -> Result<(), PseudoError>;
 }
 
 impl EvalWhile for Evaluator {
-    fn eval_while(&mut self, statement: &Statement) {
-        if let Statement::While(condition, wstatements) = statement {
+    fn eval_while(&mut self, statement: &Statement) -> Result<(), PseudoError> {
+        Ok(if let Statement::While(condition, wstatements) = statement {
             // let mut condition = self.evaluate_expr(condition);
-            while let EvalResult::Boolean(true) = self.evaluate_expr(condition) {
+            while let Ok(EvalResult::Boolean(true)) = self.evaluate_expr(condition) {
                 for statement in wstatements.iter() {
-                    self.eval_not_next_statement(statement);
+                    self.eval_not_next_statement(statement)?;
                 }
             }
             self.next_statement();
-        }
+        })
     }
 
    

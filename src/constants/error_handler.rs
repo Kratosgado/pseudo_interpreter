@@ -8,6 +8,8 @@ pub enum PseudoError {
     ParseError(String),
     KeywordError(String),
     AssignmentError(String),
+    StatementError(String),
+    ValueError(String),
     EvalError(String),
     VariableError(String),
     TypeError(String),

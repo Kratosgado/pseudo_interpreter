@@ -1,7 +1,9 @@
+use crate::constants::error_handler::PseudoError;
+
 use super::super::{Arithmetics, CallFunc, Comparison, EvalResult, Evaluator, Expr};
 
 pub trait EvalExpression {
-    fn evaluate_expr(&mut self, expr: &Expr) -> EvalResult;
+    fn evaluate_expr(&mut self, expr: &Expr) -> Result<EvalResult, PseudoError>;
 }
 
 impl EvalExpression for Evaluator {
@@ -14,28 +16,31 @@ impl EvalExpression for Evaluator {
     /// # Errors
     ///
     /// This function will return an error if .
-    fn evaluate_expr(&mut self, expr: &Expr) -> EvalResult {
+    fn evaluate_expr(&mut self, expr: &Expr) -> Result<EvalResult, PseudoError> {
         match expr {
-            Expr::Number(num) => EvalResult::Number(*num),
-            Expr::Float(num) => EvalResult::Double(*num),
-            Expr::Str(value) => EvalResult::Str(value.clone()),
+            Expr::Number(num) => Ok(EvalResult::Number(*num)),
+            Expr::Float(num) => Ok(EvalResult::Double(*num)),
+            Expr::Str(value) => Ok(EvalResult::Str(value.clone())),
             Expr::Variable(var) => {
                 if let Some(value) = self.symbol_table.get(var) {
-                    value.clone()
+                    Ok(value.clone())
                 } else {
-                    panic!("undefined variable: {}", var)
+                    return Err(PseudoError::VariableError(format!(
+                        "undefined variable: {}",
+                        var
+                    )));
                 }
             }
             Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
-            Expr::Boolean(val) => EvalResult::Boolean(*val),
+            Expr::Boolean(val) => Ok(EvalResult::Boolean(*val)),
             Expr::Comparison(left, op, right) => self.evaluate_comparison(left, op, right),
             Expr::ArrayVariable(var, index) => {
                 if let Some(array) = self.array_table.get(var).cloned() {
-                    let index = match self.evaluate_expr(&index) {
+                    let index = match self.evaluate_expr(&index)? {
                         EvalResult::Number(val) => val as usize,
                         _ => panic!("invalid indexing of array"),
                     };
-                    array.get(index).expect("Subscript out of range").clone()
+                    Ok(array.get(index).expect("Subscript out of range").clone())
                 } else {
                     panic!("undefined array variable: {}", var)
                 }
