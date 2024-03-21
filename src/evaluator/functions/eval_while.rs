@@ -17,7 +17,6 @@ impl EvalWhile for Evaluator {
                 for statement in wstatements.iter() {
                     self.eval_not_next_statement(statement);
                 }
-                // condition = self.evaluate_expr(condition);
             }
             self.next_statement();
         }
