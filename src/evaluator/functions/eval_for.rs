@@ -14,16 +14,19 @@ impl EvalFor for Evaluator {
             };
             let start = match start {
                 Some(start) => self.evaluate_expr(start),
-                None => self.symbol_table.get(&var).unwrap().clone(),
+                None => self
+                    .symbol_table
+                    .get(&var)
+                    .expect("Variable not found")
+                    .clone(),
             };
-            // let start = self.evaluate_expr(start);
             let end = self.evaluate_expr(end);
             let step = self.evaluate_expr(step);
             self.symbol_table.insert(var.clone(), start);
             while let Some(value) = self.symbol_table.get(&var) {
                 if value <= &end {
                     for statement in fstatement.iter() {
-                        self.evaluate_statement(statement);
+                        self.eval_not_next_statement(statement);
                     }
                     let value = match (self.symbol_table.get(&var).unwrap(), &step) {
                         (EvalResult::Number(val), EvalResult::Number(step)) => {

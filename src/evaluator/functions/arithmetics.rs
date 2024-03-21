@@ -17,6 +17,7 @@ impl Arithmetics for Evaluator {
             EvalResult::Str(val) => val.parse().expect("Could not parse string to integer"),
             _ => panic!("Expected a number"),
         };
+        // println!("left_val: {:?}, right_val: {:?}", left_val, right_val); // Debug
         let result = match op {
             Operator::Add => left_val + right_val,
             Operator::Subtract => left_val - right_val,

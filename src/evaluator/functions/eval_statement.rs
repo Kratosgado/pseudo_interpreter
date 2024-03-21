@@ -33,7 +33,12 @@ impl EvalStatement for Evaluator {
                 let value = self.evaluate_expr(expr);
                 if let Some(val) = self.symbol_table.get(var) {
                     if val.get_type() != value.get_type() {
-                        panic!("Type mismatch: {} is declared as {:?} but assigned {:?}", var, val.get_type(), value.get_type());
+                        panic!(
+                            "Type mismatch: {} is declared as {:?} but assigned {:?}",
+                            var,
+                            val.get_type(),
+                            value.get_type()
+                        );
                     }
                 }
                 self.symbol_table.insert(var.clone(), value);
@@ -45,8 +50,18 @@ impl EvalStatement for Evaluator {
                 self.next_statement();
                 let mut input = String::new();
                 std::io::stdin().read_line(&mut input).unwrap();
-                let value = EvalResult::Str(input.trim().to_string());
-                self.symbol_table.insert(var.clone(), value);
+                let mut value: EvalResult = EvalResult::Str(input.trim().to_string());
+                if let Some(val) = self.symbol_table.get(var) {
+                    if val.get_type() == "int" {
+                        value = EvalResult::Number(input.trim().parse().expect("Invalid input: Expected integer"));
+                    } else if val.get_type() == "double" {
+                         value = EvalResult::Double(input.trim().parse().expect("Invalid input: Expected double"));
+                    } else {
+                        panic!("Invalid type: expected {}, found {}", val.get_type(), input);
+                    }
+                }
+                self.symbol_table.insert(var.clone(), value.clone());
+
             }
             Statement::AssignArray(_, _, _)
             | Statement::AssignIndex(_, _, _)
@@ -95,9 +110,8 @@ impl EvalStatement for Evaluator {
                     print!("{}\t", self.evaluate_expr(expr))
                 }
                 self.next_statement();
-            },
+            }
             Statement::Declare(_, _) => unimplemented!(),
-
         }
     }
 }
