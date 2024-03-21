@@ -12,7 +12,7 @@ pub trait ParseWhile {
 impl ParseWhile for Parser {
     fn parse_while(&mut self) -> Result<Statement, PseudoError> {
         self.next_token();
-        let condition = self.parse_expr();
+        let condition = self.parse_expr()?;
 
         if let Some(Token::Do) = &self.current_token {
             self.next_token();

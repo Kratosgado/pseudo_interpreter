@@ -1,9 +1,8 @@
-use std::{fmt::Error, string::ParseError};
+use std::string::ParseError;
 
 use crate::lexer::enums::token::Token;
 
-
-#[derive(Debug)]    
+#[derive(Debug)]
 pub enum PseudoError {
     IoError(std::io::Error),
     ParseError(String),
@@ -13,6 +12,7 @@ pub enum PseudoError {
     VariableError(String),
     TypeError(String),
     RuntimeError(String),
+    UnexpectedEOF,
 }
 
 impl From<std::io::Error> for PseudoError {
@@ -27,12 +27,12 @@ impl From<ParseError> for PseudoError {
 }
 
 pub trait KeywordError {
-    fn keyword(expected: Vec<Token>, found: &Token) ->Self;
+    fn keyword(expected: Vec<Token>, found: &Token) -> Self;
 }
 
 // expected keyword error
 impl KeywordError for PseudoError {
     fn keyword(expected: Vec<Token>, found: &Token) -> Self {
-        PseudoError::KeywordError(format!("Expected: {:?}, found: {:?}", expected, found))
+        PseudoError::KeywordError(format!("Expected: '{}', found: '{}'", expected[0], found))
     }
 }

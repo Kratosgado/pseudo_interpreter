@@ -1,13 +1,15 @@
+use crate::constants::error_handler::PseudoError;
+
 use super::super::{Parser, Expr, Operator, Token, ParseComparison, ParsePrintExpr};
 
 pub trait ParseFactorTerm {
-    fn parse_factor(&mut self) -> Expr;
-    fn parse_term(&mut self) -> Expr;
+    fn parse_factor(&mut self) -> Result<Expr, PseudoError>;
+    fn parse_term(&mut self) -> Result<Expr, PseudoError>;
 }
 
 impl ParseFactorTerm for Parser {
-    fn parse_term(&mut self) -> Expr {
-        let mut left = self.parse_factor();
+    fn parse_term(&mut self) -> Result<Expr, PseudoError> {
+        let mut left = self.parse_factor()?;
 
         while let Some(token) = &self.current_token {
             match token {
@@ -17,7 +19,7 @@ impl ParseFactorTerm for Parser {
                 | Token::LessThanEqual
                 | Token::GreaterThanEqual
                 | Token::NotEqual => {
-                    left = self.parse_comparison(left);
+                    left = self.parse_comparison(left)?;
                 }
                 Token::Multiply | Token::Divide | Token::Modulo => {
                     let op = if matches!(token, Token::Multiply) {
@@ -28,24 +30,24 @@ impl ParseFactorTerm for Parser {
                         Operator::Divide
                     };
                     self.next_token();
-                    let right = self.parse_factor();
+                    let right = self.parse_factor()?;
                     left = Expr::BinOp(Box::new(left), op, Box::new(right));
                 }
                 _ => break,
             }
         }
-        left
+        Ok(left)
     }
 
-    fn parse_factor(&mut self) -> Expr {
+    fn parse_factor(&mut self) -> Result<Expr, PseudoError> {
         match self.current_token.take() {
             Some(Token::Number(value)) => {
                 self.next_token();
-                Expr::Number(value)
+                Ok(Expr::Number(value))
             },
             Some(Token::Float(value)) => {
                 self.next_token();
-                Expr::Float(value)
+                Ok(Expr::Float(value))
             }
             Some(Token::LParen) => {
                 self.next_token();
@@ -59,7 +61,7 @@ impl ParseFactorTerm for Parser {
             }
             Some(Token::Str(value)) => {
                 self.next_token();
-                Expr::Str(value)
+                Ok(Expr::Str(value))
             }
             Some(Token::Ident(var)) => {
                 self.next_token();
@@ -67,12 +69,12 @@ impl ParseFactorTerm for Parser {
                     self.next_token();
                     if let Some(Token::RParen) = self.current_token {
                         self.next_token();
-                        Expr::FunctionCall(var, Box::new(Some(Expr::Multi(vec![]))))
+                        Ok(Expr::FunctionCall(var, Box::new(Some(Expr::Multi(vec![])))))
                     } else {
-                        let args = self.parse_expr();
+                        let args = self.parse_expr()?;
                         if let Some(Token::RParen) = self.current_token {
                             self.next_token();
-                            Expr::FunctionCall(var, Box::new(Some(args)))
+                            Ok(Expr::FunctionCall(var, Box::new(Some(args))))
                         } else {
                             panic!("Expected closing parenthesis");
                         }
@@ -87,12 +89,12 @@ impl ParseFactorTerm for Parser {
                     //     }
                     // }
                 }else {
-                    Expr::Variable(var)
+                    Ok(Expr::Variable(var))
                 }
             }
             Some(Token::Boolean(value)) => {
                 self.next_token();
-                Expr::Boolean(value)
+                Ok(Expr::Boolean(value))
             }
             Some(Token::Array(var, index)) => {
                 self.next_token();
@@ -104,10 +106,10 @@ impl ParseFactorTerm for Parser {
                 else  {
                     panic!("Invalid array index")
                 };
-                Expr::ArrayVariable(var, Box::new(index))
+                Ok(Expr::ArrayVariable(var, Box::new(index)))
             }
             Some(token) => todo!("Implement parsing of {:?}", token),
-            None => panic!("Expected a token"),
+            None => return Err(PseudoError::UnexpectedEOF),
         }
     }
 }

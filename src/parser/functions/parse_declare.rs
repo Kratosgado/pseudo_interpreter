@@ -1,14 +1,14 @@
-use crate::lexer::enums::token::Token;
+use crate::{constants::error_handler::{KeywordError, PseudoError}, lexer::enums::token::Token};
 
 use super::super::{Statement, Parser};
 
 
 pub trait ParseDeclare {
-    fn parse_declare(&mut self) -> Statement;   
+    fn parse_declare(&mut self) -> Result<Statement, PseudoError>;   
 }
 
 impl ParseDeclare for Parser {
-    fn parse_declare(&mut self) -> Statement {
+    fn parse_declare(&mut self) -> Result<Statement, PseudoError> {
         self.next_token();
         if let Some(Token::Ident(var)) = self.current_token.clone() {
             self.next_token();
@@ -25,9 +25,9 @@ impl ParseDeclare for Parser {
                 _ => panic!("Expected type"),
             };
             self.next_token();
-            Statement::Declare(var, datatype.to_string())
+            Ok(Statement::Declare(var, datatype.to_string()))
         } else {
-            panic!("Expected identifier")
+            return Err(PseudoError::keyword(vec![Token::Ident("identifier".to_string())], &self.current_token.as_ref().unwrap()));
         }
     }
 }

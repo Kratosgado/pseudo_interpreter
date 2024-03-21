@@ -1,4 +1,3 @@
-use std::io::ErrorKind;
 
 use crate::{constants::error_handler::PseudoError, evaluator::Expr, lexer::enums::token::Token, parser::ParsePrintExpr};
 
@@ -21,11 +20,11 @@ impl ParseArray for Parser {
                 self.next_token();
                 if let Some(Token::LBracket) = &self.current_token {
                     self.next_token();
-                    let indices = self.parse_expr();
+                    let indices = self.parse_expr()?;
                     self.next_token();
                     Ok(Statement::AssignArray(var.clone(), size, indices))
                 } else {
-                    Ok(Statement::AssignIndex(var.clone(), size, self.parse_expr()))
+                    Ok(Statement::AssignIndex(var.clone(), size, self.parse_expr()?))
                 }
             } else {
                 Ok(Statement::DeclareArray(var.clone(), size))

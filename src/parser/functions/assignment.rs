@@ -14,13 +14,13 @@ impl ParseAssignment for Parser {
                 self.next_token();
                 if let Some(Token::Assign) = self.current_token {
                     self.next_token();
-                    let expr = self.parse_expr();
+                    let expr = self.parse_expr()?;
                     Ok(Statement::Assignment(var, expr))
                 }else if let Some(Token::LParen) = self.current_token {
                     self.next_token();
                     let mut args: Option<Expr> = None;
                     if self.current_token != Some(Token::RParen) {
-                        args = Some(self.parse_expr());
+                        args = Some(self.parse_expr()?);
                     }
                     Ok(Statement::Expr(Expr::FunctionCall(var, Box::new(args))))
                 }

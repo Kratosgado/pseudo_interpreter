@@ -12,7 +12,7 @@ pub trait ParseIf {
 impl ParseIf for Parser {
     fn parse_if(&mut self) -> Result<Statement, PseudoError> {
         self.next_token();
-        let condition = self.parse_expr();
+        let condition = self.parse_expr()?;
         let mut consequence: Vec<Statement> = Vec::new();
         let mut alternative: Vec<Statement> = Vec::new();
 

@@ -1,5 +1,6 @@
 known bugs:
-
+    require endfunction keywords
+    
 to be implemented:
     disallow naming variables with keywords
     control structures:

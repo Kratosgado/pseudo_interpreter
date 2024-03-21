@@ -1,4 +1,4 @@
-use std::io::ErrorKind;
+
 
 use crate::{
     constants::error_handler::{KeywordError, PseudoError},
@@ -15,7 +15,7 @@ pub trait ParseToken {
 
 impl ParseToken for Parser {
     fn parse_token(&mut self, terminators: Vec<Token>) -> Result<Vec<Statement>, PseudoError> {
-        let mut statements = Vec::new();
+        let mut statements: Vec<Statement> = Vec::new();
         while let Some(token) = &self.current_token {
             if terminators.contains(token) {
                 if token != &Token::Else && token != &Token::Return {
@@ -24,8 +24,8 @@ impl ParseToken for Parser {
                 break;
             }
             match token {
-                Token::Print => statements.push(self.parse_print()),
-                Token::Input => statements.push(self.parse_input()),
+                Token::Print => statements.push(self.parse_print()?),
+                Token::Input => statements.push(self.parse_input()?),
                 Token::Ident(_) => statements.push(self.parse_assignment()?),
                 Token::Array(_, _) => statements.push(self.parse_array()?),
                 Token::While => statements.push(self.parse_while()?),
@@ -34,9 +34,9 @@ impl ParseToken for Parser {
                 Token::Function => statements.push(self.parse_function()?),
                 Token::EOL => self.next_token(),
                 Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
-                    statements.push(Statement::Expr(self.parse_expr()))
+                    statements.push(Statement::Expr(self.parse_expr()?))
                 }
-                Token::Declare => statements.push(self.parse_declare()),
+                Token::Declare => statements.push(self.parse_declare()?),
                 Token::RParen => self.next_token(),
                 _ => return Err(PseudoError::keyword(terminators, &token)),
             }

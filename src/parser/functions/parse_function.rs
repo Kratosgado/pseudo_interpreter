@@ -35,7 +35,7 @@ impl ParseFunction for Parser {
                 let fstatements = self.parse_token(vec![Token::EndFunction, Token::Return])?;
                 if self.current_token == Some(Token::Return) {
                     self.next_token();
-                    ret_ment = Some(self.parse_expr());
+                    ret_ment = Some(self.parse_expr()?);
                     self.next_token();
                 }
                 self.next_token();

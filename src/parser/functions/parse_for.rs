@@ -15,7 +15,7 @@ pub trait ParseFor {
 impl ParseFor for Parser {
     fn parse_for(&mut self) -> Result<Statement, PseudoError> {
         self.next_token();
-        let var = self.parse_expr();
+        let var = self.parse_expr()?;
         let mut start: Option<Expr> = None;
         let end: Expr;
         let mut step = Expr::Number(1);
@@ -23,18 +23,18 @@ impl ParseFor for Parser {
 
         if let Some(Token::Assign) = &self.current_token {
             self.next_token();
-            start = Some(self.parse_expr());
+            start = Some(self.parse_expr()?);
         }
         if let Some(Token::To) = &self.current_token {
             self.next_token();
-            end = self.parse_expr();
+            end = self.parse_expr()?;
             if let Some(Token::Step) = &self.current_token {
                 self.next_token();
-                step = self.parse_expr();
+                step = self.parse_expr()?;
             }
             if let Some(Token::Do) = &self.current_token {
                 self.next_token();
-                 fstatement = self.parse_token(vec![Token::EndFor])?;
+                 fstatement.extend(self.parse_token(vec![Token::EndFor])?);
             } else {
                 panic!("Expected keyword 'Do' ")
             };
