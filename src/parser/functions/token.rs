@@ -5,33 +5,35 @@ use super::super::{
     Statement, Token,
 };
 pub trait ParseToken {
-    fn parse_token(&mut self) -> Statement;
+    fn parse_token(&mut self, termintate: Token) -> Vec<Statement>;
 }
 
 impl ParseToken for Parser {
-    fn parse_token(&mut self) -> Statement {
-        match &self.current_token {
-            Some(token) => match token {
-                Token::Print => self.parse_print(),
-                Token::Input => self.parse_input(),
-                Token::Ident(_) => self.parse_assignment(),
-                Token::Array(_, _) => self.parse_array(),
-                Token::While => self.parse_while(),
-                Token::If => self.parse_if(),
-                Token::For => self.parse_for(),
-                Token::Function => self.parse_function(),
-                Token::EOL => {
-                    self.next_token();
-                    Statement::None
-                }
+    fn parse_token(&mut self, terminate: Token) -> Vec<Statement> {
+        let mut statements = Vec::new();
+        while let Some(token) = &self.current_token {
+            if token == &terminate {
+                self.next_token();
+                break;
+            }
+            match token {
+                Token::Print => statements.push(self.parse_print()),
+                Token::Input => statements.push(self.parse_input()),
+                Token::Ident(_) => statements.push(self.parse_assignment()),
+                Token::Array(_, _) => statements.push(self.parse_array()),
+                Token::While => statements.push(self.parse_while()),
+                Token::If => statements.push(self.parse_if()),
+                Token::For => statements.push(self.parse_for()),
+                Token::Function => statements.push(self.parse_function()),
+                Token::EOL => self.next_token(),
                 Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
-                    Statement::Expr(self.parse_expr())
+                    statements.push(Statement::Expr(self.parse_expr()))
                 }
-                Token::Declare => self.parse_declare(),
-                // Token::RParen => {self.next_token(); },
-                _ => panic!("Unexpected token: {:?}", token),
-            },
-            None => panic!("No token to parse"),
+                Token::Declare => statements.push(self.parse_declare()),
+                Token::RParen => self.next_token(),
+                _ => panic!("Unexpected token: {:?}, exprected: {:?}", token, terminate),
+            }
         }
+        statements
     }
 }

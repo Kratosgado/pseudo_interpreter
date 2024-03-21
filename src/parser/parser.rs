@@ -28,15 +28,7 @@ impl Parser {
     }
 
     pub fn parse(&mut self) -> Vec<Statement> {
-        let mut statements = Vec::new();
-        while let Some(token) = &self.current_token {
-            match token {
-                Token::EOF => break,
-                _ => (),
-                
-            }
-            statements.push(self.parse_token());
-        }
+        let mut statements = self.parse_token( Token::EOF);
         statements
     }
 }

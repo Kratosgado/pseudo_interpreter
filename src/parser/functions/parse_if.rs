@@ -1,7 +1,10 @@
-use super::{super::{
-    parser::Parser, ParseArray, ParseAssignment, ParseFor, ParseFunction, ParseInput,
-    ParsePrintExpr, ParseWhile, Statement, Token,
-}, token::ParseToken};
+use super::{
+    super::{
+        parser::Parser, ParseArray, ParseAssignment, ParseFor, ParseFunction, ParseInput,
+        ParsePrintExpr, ParseWhile, Statement, Token,
+    },
+    token::ParseToken,
+};
 
 pub trait ParseIf {
     fn parse_if(&mut self) -> Statement;
@@ -20,12 +23,7 @@ impl ParseIf for Parser {
                 match token {
                     Token::Else => {
                         self.next_token();
-                        while &self.current_token != &Some(Token::EndIf){
-                            alternative.push(self.parse_token());
-                            if &self.current_token == &Some(Token::EOF) {
-                                panic!("Expected 'ENDIF' keyword")
-                            }
-                        }
+                        alternative = self.parse_token(Token::EndIf);
                     }
                     Token::Print => consequence.push(self.parse_print()),
                     Token::Input => consequence.push(self.parse_input()),
