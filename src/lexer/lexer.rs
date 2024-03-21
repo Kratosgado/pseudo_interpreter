@@ -1,5 +1,7 @@
 use std::str::Chars;
 
+use crate::constants::error_handler::PseudoError;
+
 use super::{Operator,Identifier, Comparison, Datatype, Token};
 
 
@@ -23,7 +25,7 @@ impl<'a> Lexer<'a> {
     }
 
     /// tokenize inputs
-    pub fn tokenize(&mut self) -> Vec<Token> {
+    pub fn tokenize(&mut self) -> Result<Vec<Token>, PseudoError> {
         let mut tokens = Vec::new();
 
         while let Some(ch) = self.current_char {
@@ -59,9 +61,11 @@ impl<'a> Lexer<'a> {
                 }
                 ' ' | '\t' | '\r' => self.next_char(),
                 '"' => tokens.push(self.string()),
-                _ => panic!("Invalid character: {}", ch),
+                _ => {
+                    return Err(PseudoError::ParseError(format!("Invalid character: {}", ch)));
+                }
             }
         }
-        tokens
+        Ok(tokens)
     }
 }

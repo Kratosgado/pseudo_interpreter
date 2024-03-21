@@ -1,3 +1,5 @@
+use crate::constants::error_handler::PseudoError;
+
 use super::{ParseToken, Statement, Token};
 pub struct Parser {
     tokens: Vec<Token>,
@@ -27,7 +29,7 @@ impl Parser {
         }
     }
 
-    pub fn parse(&mut self) -> Vec<Statement> {
+    pub fn parse(&mut self) -> Result<Vec<Statement>, PseudoError> {
         self.parse_token(vec![Token::EOF])
     }
 }

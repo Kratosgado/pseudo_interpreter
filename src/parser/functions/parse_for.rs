@@ -1,19 +1,19 @@
-use crate::parser::ParseArray;
+use crate::constants::error_handler::{KeywordError, PseudoError};
 
 use super::{
     super::{
-        Expr, ParseAssignment, ParseFunction, ParseIf, ParseInput, ParsePrintExpr, ParseWhile,
+        Expr, ParsePrintExpr,
         Parser, Statement, Token,
     },
     parse_token::ParseToken,
 };
 
 pub trait ParseFor {
-    fn parse_for(&mut self) -> Statement;
+    fn parse_for(&mut self) -> Result<Statement, PseudoError>;
 }
 
 impl ParseFor for Parser {
-    fn parse_for(&mut self) -> Statement {
+    fn parse_for(&mut self) -> Result<Statement, PseudoError> {
         self.next_token();
         let var = self.parse_expr();
         let mut start: Option<Expr> = None;
@@ -34,13 +34,13 @@ impl ParseFor for Parser {
             }
             if let Some(Token::Do) = &self.current_token {
                 self.next_token();
-                 fstatement = self.parse_token(vec![Token::EndFor]);
+                 fstatement = self.parse_token(vec![Token::EndFor])?;
             } else {
                 panic!("Expected keyword 'Do' ")
             };
-            Statement::For(var, start, end, step, Box::new(fstatement))
+            Ok(Statement::For(var, start, end, step, Box::new(fstatement)))
         } else {
-            panic!("Expected 'To' keyword")
+            return Err(PseudoError::keyword(vec![Token::To], &self.current_token.as_ref().unwrap()));
         }
     }
 }

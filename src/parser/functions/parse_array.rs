@@ -1,13 +1,15 @@
-use crate::{evaluator::Expr, lexer::enums::token::Token, parser::ParsePrintExpr};
+use std::io::ErrorKind;
+
+use crate::{constants::error_handler::PseudoError, evaluator::Expr, lexer::enums::token::Token, parser::ParsePrintExpr};
 
 use super::super::{Parser, Statement};
 
 pub trait ParseArray {
-    fn parse_array(&mut self) -> Statement;
+    fn parse_array(&mut self) -> Result<Statement, PseudoError>;
 }
 
 impl ParseArray for Parser {
-    fn parse_array(&mut self) -> Statement {
+    fn parse_array(&mut self) -> Result<Statement, PseudoError> {
         if let Some(Token::Array(var, size)) = self.current_token.clone() {
             let size = match size.as_ref() {
                 Token::Number(val) => Expr::Number(*val),
@@ -21,15 +23,15 @@ impl ParseArray for Parser {
                     self.next_token();
                     let indices = self.parse_expr();
                     self.next_token();
-                    Statement::AssignArray(var.clone(), size, indices)
+                    Ok(Statement::AssignArray(var.clone(), size, indices))
                 } else {
-                    Statement::AssignIndex(var.clone(), size, self.parse_expr())
+                    Ok(Statement::AssignIndex(var.clone(), size, self.parse_expr()))
                 }
             } else {
-                Statement::DeclareArray(var.clone(), size)
+                Ok(Statement::DeclareArray(var.clone(), size))
             }
         } else {
-            panic!("Invalid array declaration")
+            return  Err(PseudoError::AssignmentError("Invalid array assignment".to_string()));
         }
     }
 }
