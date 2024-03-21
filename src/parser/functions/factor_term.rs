@@ -1,4 +1,4 @@
-use crate::constants::error_handler::PseudoError;
+use crate::constants::error_handler::{KeywordError, PseudoError};
 
 use super::super::{Parser, Expr, Operator, Token, ParseComparison, ParsePrintExpr};
 
@@ -56,7 +56,7 @@ impl ParseFactorTerm for Parser {
                     self.next_token();
                     expr
                 } else {
-                    panic!("Expected closing parenthesis");
+                    return Err(PseudoError::keyword(vec![Token::RParen], &self.current_token.as_ref().unwrap()));
                 }
             }
             Some(Token::Str(value)) => {
@@ -76,7 +76,7 @@ impl ParseFactorTerm for Parser {
                             self.next_token();
                             Ok(Expr::FunctionCall(var, Box::new(Some(args))))
                         } else {
-                            panic!("Expected closing parenthesis");
+                            return Err(PseudoError::keyword(vec![Token::RParen], &self.current_token.as_ref().unwrap()));
                         }
                     }
                     // while let Some(token ) = &self.current_token {
@@ -104,7 +104,7 @@ impl ParseFactorTerm for Parser {
                     Expr::Variable(var.clone())
                 }
                 else  {
-                    panic!("Invalid array index")
+                    return Err(PseudoError::ValueError("Invalid array index".to_string()));
                 };
                 Ok(Expr::ArrayVariable(var, Box::new(index)))
             }

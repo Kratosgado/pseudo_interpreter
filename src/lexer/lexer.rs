@@ -32,8 +32,8 @@ impl<'a> Lexer<'a> {
             match ch {
                 '0'..='9' => tokens.push(self.number()),
                 'a'..='z' | 'A'..='Z' | '_' => tokens.push(self.encode_identifier()),
-                '+' | '-' | '*' | '/' | '%' | '(' | ')' => tokens.push(self.encode_operator()),
-                '<' | '>' | '!' | '=' | '&' | '|' => tokens.push(self.encode_comparison()),
+                '+' | '-' | '*' | '/' | '%' | '(' | ')' => tokens.push(self.encode_operator()?),
+                '<' | '>' | '!' | '=' | '&' | '|' => tokens.push(self.encode_comparison()?),
                 ',' => {
                     self.next_char();
                     tokens.push(Token::Comma);

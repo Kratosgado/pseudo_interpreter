@@ -1,6 +1,8 @@
 use std::cmp::{PartialEq, PartialOrd};
 use std::fmt::{self};
 
+use crate::constants::error_handler::PseudoError;
+
 #[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum EvalResult {
     Number(i64),
@@ -24,108 +26,108 @@ impl EvalResult {
     }
 }
 pub trait Operation {
-    fn add(&self, other: &Self) -> EvalResult;
-    fn subtract(&self, other: &Self) -> EvalResult;
-    fn multiply(&self, other: &Self) -> EvalResult;
-    fn divide(&self, other: &Self) -> EvalResult;
-    fn modulo(&self, other: &Self) -> EvalResult;
-    fn greater_than(&self, other: &Self) -> EvalResult;
-    fn less_than(&self, other: &Self) -> EvalResult;
-    fn equal(&self, other: &Self) -> EvalResult;
-    fn not_equal(&self, other: &Self) -> EvalResult;
-    fn greater_or_equal(&self, other: &Self) -> EvalResult;
-    fn less_or_equal(&self, other: &Self) -> EvalResult;
+    fn add(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn subtract(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn multiply(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn divide(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn modulo(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn greater_than(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn less_than(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn not_equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn greater_or_equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn less_or_equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
 }
 
 impl Operation for EvalResult {
-    fn add(&self, other: &EvalResult) -> EvalResult {
+    fn add(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Number(n1 + n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Double(n1 + n2),
-            (EvalResult::Str(s1), EvalResult::Str(s2)) => EvalResult::Str(format!("{}{}", s1, s2)),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 + n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 + n2)),
+            (EvalResult::Str(s1), EvalResult::Str(s2)) => Ok(EvalResult::Str(format!("{}{}", s1, s2))),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn subtract(&self, other: &EvalResult) -> EvalResult {
+    fn subtract(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Number(n1 - n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Double(n1 - n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 - n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 - n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn multiply(&self, other: &EvalResult) -> EvalResult {
+    fn multiply(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Number(n1 * n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Double(n1 * n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 * n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 * n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn divide(&self, other: &EvalResult) -> EvalResult {
+    fn divide(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Number(n1 / n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Double(n1 / n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 / n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 / n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn modulo(&self, other: &EvalResult) -> EvalResult {
+    fn modulo(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Number(n1 % n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Double(n1 % n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 % n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 % n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn greater_than(&self, other: &EvalResult) -> EvalResult {
+    fn greater_than(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 > n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Boolean(n1 > n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Boolean(n1 > n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Boolean(n1 > n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn less_than(&self, other: &EvalResult) -> EvalResult {
+    fn less_than(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 < n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Boolean(n1 < n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Boolean(n1 < n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Boolean(n1 < n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn greater_or_equal(&self, other: &EvalResult) -> EvalResult {
+    fn greater_or_equal(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 >= n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Boolean(n1 >= n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Boolean(n1 >= n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Boolean(n1 >= n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 
-    fn equal(&self, other: &Self) -> EvalResult {
+    fn equal(&self, other: &Self) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 == n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Boolean(n1 == n2),
-            (EvalResult::Str(s1), EvalResult::Str(s2)) => EvalResult::Boolean(s1 == s2),
-            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => EvalResult::Boolean(b1 == b2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Boolean(n1 == n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Boolean(n1 == n2)),
+            (EvalResult::Str(s1), EvalResult::Str(s2)) => Ok(EvalResult::Boolean(s1 == s2)),
+            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => Ok(EvalResult::Boolean(b1 == b2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
-    fn not_equal(&self, other: &Self) -> EvalResult {
+    fn not_equal(&self, other: &Self) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 != n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Boolean(n1 != n2),
-            (EvalResult::Str(s1), EvalResult::Str(s2)) => EvalResult::Boolean(s1 != s2),
-            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => EvalResult::Boolean(b1 != b2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Boolean(n1 != n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Boolean(n1 != n2)),
+            (EvalResult::Str(s1), EvalResult::Str(s2)) => Ok(EvalResult::Boolean(s1 != s2)),
+            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => Ok(EvalResult::Boolean(b1 != b2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
-    fn less_or_equal(&self, other: &Self) -> EvalResult {
+    fn less_or_equal(&self, other: &Self) -> Result<EvalResult, PseudoError> {
         match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => EvalResult::Boolean(n1 <= n2),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => EvalResult::Boolean(n1 <= n2),
-            _ => panic!("Invalid operation"),
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Boolean(n1 <= n2)),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Boolean(n1 <= n2)),
+            _ => return Err(PseudoError::InvalidOperation),
         }
     }
 }

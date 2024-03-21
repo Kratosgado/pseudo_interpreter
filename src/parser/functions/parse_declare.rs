@@ -15,14 +15,14 @@ impl ParseDeclare for Parser {
             if let Some(Token::As) = self.current_token {
                 self.next_token();
             }else {
-                panic!("Expected 'AS' keyword after variable declaration")
+                return Err(PseudoError::keyword(vec![Token::As], &self.current_token.as_ref().unwrap()));
             }
             let datatype = match self.current_token {
                 Some(Token::Integer) => "int",
                 Some(Token::String) => "str",
                 Some(Token::Bool) => "bool",
                 Some(Token::Double) =>"double",
-                _ => panic!("Expected type"),
+                _ =>return Err(PseudoError::keyword(vec![Token::Ident("type: {integer, string, bool, double}".to_string())], &self.current_token.as_ref().unwrap())),
             };
             self.next_token();
             Ok(Statement::Declare(var, datatype.to_string()))

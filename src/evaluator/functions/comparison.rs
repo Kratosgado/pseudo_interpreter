@@ -12,12 +12,12 @@ impl Comparison for Evaluator {
         let right_val = self.evaluate_expr(right)?;
 
         match op {
-            Operator::Equal => Ok(left_val.equal(&right_val)),
-            Operator::LessThan => Ok(left_val.less_than(&right_val)),
-            Operator::GreaterThan => Ok(left_val.greater_than(&right_val)),
-            Operator::LessThanEqual => Ok(left_val.less_or_equal(&right_val)),
-            Operator::GreaterThanEqual => Ok(left_val.greater_or_equal(&right_val)),
-            Operator::NotEqual => Ok(left_val.not_equal(&right_val)),
+            Operator::Equal => Ok(left_val.equal(&right_val)?),
+            Operator::LessThan => Ok(left_val.less_than(&right_val)?),
+            Operator::GreaterThan => Ok(left_val.greater_than(&right_val)?),
+            Operator::LessThanEqual => Ok(left_val.less_or_equal(&right_val)?),
+            Operator::GreaterThanEqual => Ok(left_val.greater_or_equal(&right_val)?),
+            Operator::NotEqual => Ok(left_val.not_equal(&right_val)?),
             _ => return Err(PseudoError::TypeError("Invalid comparison operator".to_string())),
         }
     }

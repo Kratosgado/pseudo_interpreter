@@ -16,7 +16,7 @@ impl ParseComparison for Parser {
                 Token::LessThanEqual => Operator::LessThanEqual,
                 Token::GreaterThanEqual => Operator::GreaterThanEqual,
                 Token::NotEqual => Operator::NotEqual,
-                _ => panic!("Expected comparison operator"),
+                _ => return Err(PseudoError::InvalidToken("Invalid comparison operator".to_string())),
             };
             self.next_token();
             let right = self.parse_expr()?;

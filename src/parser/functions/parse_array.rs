@@ -13,7 +13,7 @@ impl ParseArray for Parser {
             let size = match size.as_ref() {
                 Token::Number(val) => Expr::Number(*val),
                 Token::Ident(var) => Expr::Variable(var.clone()),
-                _ => panic!("Invalid array size"),
+                _ => return Err(PseudoError::ValueError("Invalid array size".to_string())),
             };
             self.next_token();
             if let Some(Token::Assign) = &self.current_token {

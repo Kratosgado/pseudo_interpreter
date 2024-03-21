@@ -1,72 +1,72 @@
 use super::super::Token;
-use crate::lexer::lexer::Lexer;
+use crate::{constants::error_handler::PseudoError, lexer::lexer::Lexer};
 
 pub trait Comparison {
     /// catch comparisons
     /// catch =, ==, <, >, <=, >=, !=
     /// catch &&, ||
     /// catch !
-    fn encode_comparison(&mut self) -> Token;
+    fn encode_comparison(&mut self) -> Result<Token, PseudoError>;
 }
 
 impl <'a> Comparison for Lexer<'a> {
-    fn encode_comparison(&mut self) -> Token {
+    fn encode_comparison(&mut self) -> Result<Token, PseudoError> {
         match self.current_char {
             Some('<') => {
                 self.next_char();
                 if let Some('=') = self.current_char {
                     self.next_char();
-                    Token::LessThanEqual
+                    Ok(Token::LessThanEqual)
                 } else {
-                    Token::LessThan
+                    Ok(Token::LessThan)
                 }
             }
             Some('>') => {
                 self.next_char();
                 if let Some('=') = self.current_char {
                     self.next_char();
-                    Token::GreaterThanEqual
+                    Ok(Token::GreaterThanEqual)
                 } else {
-                    Token::GreaterThan
+                    Ok(Token::GreaterThan)
                 }
             }
             Some('!') => {
                 self.next_char();
                 if let Some('=') = self.current_char {
                     self.next_char();
-                    Token::NotEqual
+                    Ok(Token::NotEqual)
                 } else {
-                    Token::Not
+                    Ok(Token::Not)
                 }
             }
             Some('=') => {
                 self.next_char();
                 if let Some('=') = self.current_char {
                     self.next_char();
-                    Token::Equal
+                    Ok(Token::Equal)
                 } else {
-                    Token::Assign
+                    Ok(Token::Assign)
                 }
             }
             Some('&') => {
                 self.next_char();
                 if let Some('&') = self.current_char {
                     self.next_char();
-                    Token::And
+                    Ok(Token::And)
                 } else {
-                    panic!("Invalid character: &");
+                    return Err(PseudoError::InvalidToken("Invalid character: &".to_string()));
                 }
             }
             Some('|') => {
                 self.next_char();
                 if let Some('|') = self.current_char {
                     self.next_char();
-                    Token::Or
+                    Ok(Token::Or)
                 } else {
-                    panic!("Invalid character: |");
+                    return Err(PseudoError::InvalidToken("Invalid character: |".to_string()));
                 }
             }
-            _ => panic!("Invalid character"),
+            _ => return Err(PseudoError::InvalidToken("Invalid character:".to_string())),
         }
     }
 }

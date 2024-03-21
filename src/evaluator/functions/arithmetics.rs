@@ -15,7 +15,7 @@ impl Arithmetics for Evaluator {
         let right_val = match self.evaluate_expr(right)? {
             EvalResult::Number(val) => val,
             EvalResult::Str(val) => val.parse().expect("Could not parse string to integer"),
-            _ => panic!("Expected a number"),
+            _ => return Err(PseudoError::TypeError("Expected a number".to_string())),
         };
         // println!("left_val: {:?}, right_val: {:?}", left_val, right_val); // Debug
         let result = match op {
@@ -24,7 +24,7 @@ impl Arithmetics for Evaluator {
             Operator::Multiply => left_val * right_val,
             Operator::Divide => left_val / right_val,
             Operator::Modulo => left_val % right_val,
-            _ => panic!("Invalid arithmetic operator"),
+            _ => return Err(PseudoError::InvalidOperation),
         };
         Ok(EvalResult::Number(result))
     }

@@ -38,11 +38,14 @@ impl EvalExpression for Evaluator {
                 if let Some(array) = self.array_table.get(var).cloned() {
                     let index = match self.evaluate_expr(&index)? {
                         EvalResult::Number(val) => val as usize,
-                        _ => panic!("invalid indexing of array"),
+                        _ => return Err(PseudoError::ValueError("Invalid indexing of array".to_string())),
                     };
                     Ok(array.get(index).expect("Subscript out of range").clone())
                 } else {
-                    panic!("undefined array variable: {}", var)
+                    return Err(PseudoError::VariableError(format!(
+                        "undefined variable: {}",
+                        var
+                    )));
                 }
             }
             Expr::Param(_) => todo!("evaluator for parameters not implemented"),
