@@ -1,6 +1,7 @@
-use super::super::{
-    parser::Parser, ParseAssignment, ParseFor, ParsePrintExpr, ParseWhile, Statement, Token,
-};
+use super::{super::{
+    parser::Parser, ParseArray, ParseAssignment, ParseFor, ParseFunction, ParseInput,
+    ParsePrintExpr, ParseWhile, Statement, Token,
+}, token::ParseToken};
 
 pub trait ParseIf {
     fn parse_if(&mut self) -> Statement;
@@ -19,28 +20,21 @@ impl ParseIf for Parser {
                 match token {
                     Token::Else => {
                         self.next_token();
-                        while let Some(token) = &self.current_token {
-                            match token {
-                                Token::Print => alternative.push(self.parse_print()),
-                                Token::Ident(_) => alternative.push(self.parse_assignment()),
-                                Token::If => alternative.push(self.parse_if()),
-                                Token::For => alternative.push(self.parse_for()),
-                                Token::EOL => self.next_token(),
-                                Token::EOF => break,
-                                Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
-                                    alternative.push(Statement::Expr(self.parse_expr()))
-                                }
-                                Token::EndIf => break,
-                                _ => panic!("Expected 'EndIf' keyword"),
+                        while &self.current_token != &Some(Token::EndIf){
+                            alternative.push(self.parse_token());
+                            if &self.current_token == &Some(Token::EOF) {
+                                panic!("Expected 'ENDIF' keyword")
                             }
                         }
                     }
                     Token::Print => consequence.push(self.parse_print()),
+                    Token::Input => consequence.push(self.parse_input()),
                     Token::Ident(_) => consequence.push(self.parse_assignment()),
+                    Token::Array(_, _) => consequence.push(self.parse_array()),
                     Token::While => consequence.push(self.parse_while()),
                     Token::If => consequence.push(self.parse_if()),
                     Token::For => consequence.push(self.parse_for()),
-
+                    Token::Function => consequence.push(self.parse_function()),
                     Token::EOL => self.next_token(),
                     Token::EOF => break,
                     Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {

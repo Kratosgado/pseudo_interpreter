@@ -1,7 +1,8 @@
 use crate::parser::ParseArray;
 
 use super::super::{
-    Expr, ParseAssignment, ParseIf, ParsePrintExpr, ParseWhile, Parser, Statement, Token,
+    Expr, ParseAssignment, ParseFunction, ParseIf, ParseInput, ParsePrintExpr, ParseWhile, Parser,
+    Statement, Token,
 };
 
 pub trait ParseFor {
@@ -33,11 +34,13 @@ impl ParseFor for Parser {
                 while let Some(token) = &self.current_token {
                     match token {
                         Token::Print => fstatement.push(self.parse_print()),
+                        Token::Input => fstatement.push(self.parse_input()),
                         Token::Ident(_) => fstatement.push(self.parse_assignment()),
+                        Token::Array(_, _) => fstatement.push(self.parse_array()),
                         Token::While => fstatement.push(self.parse_while()),
                         Token::If => fstatement.push(self.parse_if()),
                         Token::For => fstatement.push(self.parse_for()),
-                        Token::Array(_,_) => fstatement.push(self.parse_array()),
+                        Token::Function => fstatement.push(self.parse_function()),
                         Token::EOL => self.next_token(),
                         Token::EOF => break,
                         Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {

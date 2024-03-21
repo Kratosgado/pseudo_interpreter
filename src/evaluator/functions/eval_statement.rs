@@ -53,15 +53,24 @@ impl EvalStatement for Evaluator {
                 let mut value: EvalResult = EvalResult::Str(input.trim().to_string());
                 if let Some(val) = self.symbol_table.get(var) {
                     if val.get_type() == "int" {
-                        value = EvalResult::Number(input.trim().parse().expect("Invalid input: Expected integer"));
+                        value = EvalResult::Number(
+                            input
+                                .trim()
+                                .parse()
+                                .expect("Invalid input: Expected integer"),
+                        );
                     } else if val.get_type() == "double" {
-                         value = EvalResult::Double(input.trim().parse().expect("Invalid input: Expected double"));
+                        value = EvalResult::Double(
+                            input
+                                .trim()
+                                .parse()
+                                .expect("Invalid input: Expected double"),
+                        );
                     } else {
                         panic!("Invalid type: expected {}, found {}", val.get_type(), input);
                     }
                 }
                 self.symbol_table.insert(var.clone(), value.clone());
-
             }
             Statement::AssignArray(_, _, _)
             | Statement::AssignIndex(_, _, _)
@@ -76,6 +85,7 @@ impl EvalStatement for Evaluator {
                 self.next_statement();
             }
             Statement::Declare(var, datatype) => self.eval_declare(var, datatype),
+            Statement::None => self.next_statement(),
         }
     }
 
@@ -112,6 +122,7 @@ impl EvalStatement for Evaluator {
                 self.next_statement();
             }
             Statement::Declare(_, _) => unimplemented!(),
+            Statement::None => self.next_statement(),
         }
     }
 }

@@ -8,6 +8,7 @@ pub enum Statement {
     Print(Expr),
     PrintMulti(Vec<Expr>),
     Input(String),
+    None,
 
     // array
     AssignArray(String, Expr, Expr),
