@@ -86,7 +86,6 @@ impl EvalStatement for Evaluator {
             }
             Statement::Declare(var, datatype) => self.eval_declare(var, datatype),
             Statement::None => self.next_statement(),
-            Statement::Block(_) => todo!(),
         }
     }
 
@@ -124,7 +123,6 @@ impl EvalStatement for Evaluator {
             }
             Statement::Declare(_, _) => unimplemented!(),
             Statement::None => self.next_statement(),
-            Statement::Block(_) => todo!(),
         }
     }
 }

@@ -1,6 +1,6 @@
 use super::{
     super::{parser::Parser, ParsePrintExpr, Statement, Token},
-    token::ParseToken,
+    parse_token::ParseToken,
 };
 
 pub trait ParseIf {
@@ -21,33 +21,6 @@ impl ParseIf for Parser {
                 self.next_token();
                 alternative.extend(self.parse_token(vec![Token::EndIf]));
             }
-
-            // while let Some(token) = &self.current_token {
-            //     match token {
-            //         Token::Else => {
-            //             self.next_token();
-            //             alternative.push(Statement::Block(self.parse_token(Token::EndIf)));
-            //         }
-            //         Token::Print => consequence.push(self.parse_print()),
-            //         Token::Input => consequence.push(self.parse_input()),
-            //         Token::Ident(_) => consequence.push(self.parse_assignment()),
-            //         Token::Array(_, _) => consequence.push(self.parse_array()),
-            //         Token::While => consequence.push(self.parse_while()),
-            //         Token::If => consequence.push(self.parse_if()),
-            //         Token::For => consequence.push(self.parse_for()),
-            //         Token::Function => consequence.push(self.parse_function()),
-            //         Token::EOL => self.next_token(),
-            //         Token::EOF => break,
-            //         Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
-            //             consequence.push(Statement::Expr(self.parse_expr()))
-            //         }
-            //         Token::EndIf => {
-            //             self.next_token();
-            //             break;
-            //         }
-            //         _ => panic!("Expected 'EndIf' keyword"),
-            //     }
-            // }
             Statement::If(
                 condition,
                 Box::new(consequence),

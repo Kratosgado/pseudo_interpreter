@@ -65,7 +65,18 @@ impl ParseFactorTerm for Parser {
                 self.next_token();
                 if let Some(Token::LParen) = self.current_token {
                     self.next_token();
-                    let args = self.parse_expr();
+                    if let Some(Token::RParen) = self.current_token {
+                        self.next_token();
+                        Expr::FunctionCall(var, Box::new(Some(Expr::Multi(vec![]))))
+                    } else {
+                        let args = self.parse_expr();
+                        if let Some(Token::RParen) = self.current_token {
+                            self.next_token();
+                            Expr::FunctionCall(var, Box::new(Some(args)))
+                        } else {
+                            panic!("Expected closing parenthesis");
+                        }
+                    }
                     // while let Some(token ) = &self.current_token {
                     //     match token {
                     //         Token::RParen => {
@@ -75,7 +86,6 @@ impl ParseFactorTerm for Parser {
                     //         _ => args.push(self.parse_expr())
                     //     }
                     // }
-                    Expr::FunctionCall(var, Box::new(args))
                 }else {
                     Expr::Variable(var)
                 }

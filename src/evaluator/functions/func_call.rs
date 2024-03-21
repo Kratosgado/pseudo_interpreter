@@ -1,20 +1,26 @@
 use super::{super::{EvalExpression, EvalResult, EvalStatement, Evaluator, Expr}, eval_statement::destruct_multi};
 
 pub trait CallFunc {
-    fn call_func(&mut self, name: &String, args: &Expr) -> EvalResult;
+    fn call_func(&mut self, name: &String, args: &Option<Expr>) -> EvalResult;
 }
 
 impl CallFunc for Evaluator {
-    fn call_func(&mut self, name: &String, args: &Expr) -> EvalResult {
+    fn call_func(&mut self, name: &String, args: &Option<Expr>) -> EvalResult {
         if let Some(func) = self.function_args.get(name).cloned() {
-            let args = destruct_multi(args);
-            if func.params.len() != args.len() {
+            let mut arg = vec![];
+            match args {
+                Some(p) => {
+                    arg = destruct_multi(p);
+                },
+                None => {},
+            };
+            if func.params.len() != arg.len() {
                 panic!("function arguments not matching")
             }
             let mut iter = 0;
-            while iter < args.len() {
+            while iter < arg.len() {
                 let var = &func.params[iter];
-                let val = self.evaluate_expr(&args[iter]);
+                let val = self.evaluate_expr(&arg[iter]);
                 if let Expr::Param(var) = var {
                     self.symbol_table.insert(var.clone(), val);
                     iter += 1;

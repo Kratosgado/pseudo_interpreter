@@ -1,7 +1,7 @@
 use super::{super::{
     parser::Parser,
     ParsePrintExpr, Statement, Token,
-}, token::ParseToken};
+}, parse_token::ParseToken};
 
 pub trait ParseWhile {
     fn parse_while(&mut self) -> Statement;

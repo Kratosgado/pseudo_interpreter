@@ -5,7 +5,7 @@ use super::{
         Expr, ParseAssignment, ParseFunction, ParseIf, ParseInput, ParsePrintExpr, ParseWhile,
         Parser, Statement, Token,
     },
-    token::ParseToken,
+    parse_token::ParseToken,
 };
 
 pub trait ParseFor {

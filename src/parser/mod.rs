@@ -10,7 +10,7 @@ mod functions {
     pub mod parse_input;
     pub mod parse_while;
     pub mod print_expr;
-    pub mod token;
+    pub mod parse_token;
     pub mod parse_declare;
 }
 
@@ -19,6 +19,6 @@ pub use functions::{
     assignment::ParseAssignment, comparison::ParseComparison, factor_term::ParseFactorTerm,
     parse_array::ParseArray, parse_for::ParseFor, parse_function::ParseFunction, parse_if::ParseIf,
     parse_input::ParseInput, parse_while::ParseWhile, print_expr::ParsePrintExpr,
-    token::ParseToken, parse_declare::ParseDeclare,
+    parse_token::ParseToken, parse_declare::ParseDeclare,
 };
 pub use parser::Parser;

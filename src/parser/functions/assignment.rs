@@ -16,16 +16,10 @@ impl ParseAssignment for Parser {
                     Statement::Assignment(var, expr)
                 }else if let Some(Token::LParen) = self.current_token {
                     self.next_token();
-                    let args = self.parse_expr();
-                    // while let Some(token ) = &self.current_token {
-                    //     match token {
-                    //         Token::RParen => {
-                    //             self.next_token();
-                    //             break;
-                    //         }
-                    //         _ => args.push(self.parse_expr())
-                    //     }
-                    // }
+                    let mut args: Option<Expr> = None;
+                    if self.current_token != Some(Token::RParen) {
+                        args = Some(self.parse_expr());
+                    }
                     Statement::Expr(Expr::FunctionCall(var, Box::new(args)))
                 }
                  else {

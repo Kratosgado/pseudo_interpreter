@@ -1,4 +1,4 @@
-use super::{expr::Expr};
+use super::expr::Expr;
 
 #[derive(Debug, Clone)]
 pub enum Statement {
@@ -9,7 +9,6 @@ pub enum Statement {
     PrintMulti(Vec<Expr>),
     Input(String),
     None,
-    Block(Vec<Statement>),
 
     // array
     AssignArray(String, Expr, Expr),

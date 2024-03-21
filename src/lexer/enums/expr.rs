@@ -14,7 +14,7 @@ pub enum Expr {
     Multi(Vec<Expr>),
 
     Param(String),
-    FunctionCall(String, Box<Expr>),
+    FunctionCall(String, Box<Option<Expr>>),
 
     // comparison
     Comparison(Box<Expr>, Operator, Box<Expr>),
