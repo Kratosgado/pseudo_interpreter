@@ -14,7 +14,7 @@ impl ParseWhile for Parser {
 
         if let Some(Token::Do) = &self.current_token {
             self.next_token();
-            let wstatement = self.parse_token(Token::EndWhile);
+            let wstatement = self.parse_token(vec![Token::EndWhile]);
             Statement::While(condition, Box::new(wstatement))
         } else {
             panic!("Expected 'Do' keyword")

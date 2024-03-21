@@ -1,8 +1,11 @@
 use crate::parser::ParseArray;
 
-use super::super::{
-    Expr, ParseAssignment, ParseFunction, ParseIf, ParseInput, ParsePrintExpr, ParseWhile, Parser,
-    Statement, Token,
+use super::{
+    super::{
+        Expr, ParseAssignment, ParseFunction, ParseIf, ParseInput, ParsePrintExpr, ParseWhile,
+        Parser, Statement, Token,
+    },
+    token::ParseToken,
 };
 
 pub trait ParseFor {
@@ -31,28 +34,7 @@ impl ParseFor for Parser {
             }
             if let Some(Token::Do) = &self.current_token {
                 self.next_token();
-                while let Some(token) = &self.current_token {
-                    match token {
-                        Token::Print => fstatement.push(self.parse_print()),
-                        Token::Input => fstatement.push(self.parse_input()),
-                        Token::Ident(_) => fstatement.push(self.parse_assignment()),
-                        Token::Array(_, _) => fstatement.push(self.parse_array()),
-                        Token::While => fstatement.push(self.parse_while()),
-                        Token::If => fstatement.push(self.parse_if()),
-                        Token::For => fstatement.push(self.parse_for()),
-                        Token::Function => fstatement.push(self.parse_function()),
-                        Token::EOL => self.next_token(),
-                        Token::EOF => break,
-                        Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
-                            fstatement.push(Statement::Expr(self.parse_expr()))
-                        }
-                        Token::EndFor => {
-                            self.next_token();
-                            break;
-                        }
-                        _ => panic!("Expected 'EndFor' keyword"),
-                    }
-                }
+                 fstatement = self.parse_token(vec![Token::EndFor]);
             } else {
                 panic!("Expected keyword 'Do' ")
             };

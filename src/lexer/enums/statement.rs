@@ -9,6 +9,7 @@ pub enum Statement {
     PrintMulti(Vec<Expr>),
     Input(String),
     None,
+    Block(Vec<Statement>),
 
     // array
     AssignArray(String, Expr, Expr),

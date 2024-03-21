@@ -28,7 +28,6 @@ impl Parser {
     }
 
     pub fn parse(&mut self) -> Vec<Statement> {
-        let mut statements = self.parse_token( Token::EOF);
-        statements
+        self.parse_token(vec![Token::EOF])
     }
 }

@@ -5,15 +5,17 @@ use super::super::{
     Statement, Token,
 };
 pub trait ParseToken {
-    fn parse_token(&mut self, termintate: Token) -> Vec<Statement>;
+    fn parse_token(&mut self, termintators: Vec<Token>) -> Vec<Statement>;
 }
 
 impl ParseToken for Parser {
-    fn parse_token(&mut self, terminate: Token) -> Vec<Statement> {
+    fn parse_token(&mut self, terminators: Vec<Token>) -> Vec<Statement> {
         let mut statements = Vec::new();
         while let Some(token) = &self.current_token {
-            if token == &terminate {
-                self.next_token();
+            if terminators.contains(token) {
+                if token != &Token::Else {
+                    self.next_token();
+                }
                 break;
             }
             match token {
@@ -31,7 +33,7 @@ impl ParseToken for Parser {
                 }
                 Token::Declare => statements.push(self.parse_declare()),
                 Token::RParen => self.next_token(),
-                _ => panic!("Unexpected token: {:?}, exprected: {:?}", token, terminate),
+                _ => panic!("Unexpected token: {:?}, expected: {:?}", token, terminators),
             }
         }
         statements
