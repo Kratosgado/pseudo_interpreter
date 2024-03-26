@@ -1,6 +1,6 @@
 use crate::constants::error_handler::{KeywordError, PseudoError};
 
-use super::super::{Parser, Expr, Operator, Token, ParseComparison, ParsePrintExpr};
+use super::super::{Expr, Operator, ParseComparison, ParsePrintExpr, Parser, Token};
 
 pub trait ParseFactorTerm {
     fn parse_factor(&mut self) -> Result<Expr, PseudoError>;
@@ -41,10 +41,19 @@ impl ParseFactorTerm for Parser {
 
     fn parse_factor(&mut self) -> Result<Expr, PseudoError> {
         match self.current_token.take() {
+            Some(Token::Minus) => {
+                self.next_token();
+                if let Some(Token::Number(val)) = self.current_token {
+                    self.next_token();
+                    Ok(Expr::Number(-val))
+                } else {
+                    return Err(PseudoError::ValueError("expected a number".to_string()));
+                }
+            }
             Some(Token::Number(value)) => {
                 self.next_token();
                 Ok(Expr::Number(value))
-            },
+            }
             Some(Token::Float(value)) => {
                 self.next_token();
                 Ok(Expr::Float(value))
@@ -56,7 +65,10 @@ impl ParseFactorTerm for Parser {
                     self.next_token();
                     expr
                 } else {
-                    return Err(PseudoError::keyword(vec![Token::RParen], &self.current_token.as_ref().unwrap()));
+                    return Err(PseudoError::keyword(
+                        vec![Token::RParen],
+                        &self.current_token.as_ref().unwrap(),
+                    ));
                 }
             }
             Some(Token::Str(value)) => {
@@ -76,19 +88,13 @@ impl ParseFactorTerm for Parser {
                             self.next_token();
                             Ok(Expr::FunctionCall(var, Box::new(Some(args))))
                         } else {
-                            return Err(PseudoError::keyword(vec![Token::RParen], &self.current_token.as_ref().unwrap()));
+                            return Err(PseudoError::keyword(
+                                vec![Token::RParen],
+                                &self.current_token.as_ref().unwrap(),
+                            ));
                         }
                     }
-                    // while let Some(token ) = &self.current_token {
-                    //     match token {
-                    //         Token::RParen => {
-                    //             self.next_token();
-                    //             break;
-                    //         }
-                    //         _ => args.push(self.parse_expr())
-                    //     }
-                    // }
-                }else {
+                } else {
                     Ok(Expr::Variable(var))
                 }
             }
@@ -96,14 +102,18 @@ impl ParseFactorTerm for Parser {
                 self.next_token();
                 Ok(Expr::Boolean(value))
             }
+            Some(Token::Not) => {
+                self.next_token();
+                let val = self.parse_expr()?;
+                Ok(Expr::Not(Box::new(val)))
+            }
             Some(Token::Array(var, index)) => {
                 self.next_token();
                 let index = if let Token::Number(val) = index.as_ref() {
                     Expr::Number(*val)
                 } else if let Token::Ident(var) = index.as_ref() {
                     Expr::Variable(var.clone())
-                }
-                else  {
+                } else {
                     return Err(PseudoError::ValueError("Invalid array index".to_string()));
                 };
                 Ok(Expr::ArrayVariable(var, Box::new(index)))

@@ -31,6 +31,17 @@ impl EvalExpression for Evaluator {
                     )));
                 }
             }
+            Expr::Not(expr) => {
+                // let res: EvalResult = self.evaluate_expr(expr)?;
+                match self.evaluate_expr(expr)? {
+                    EvalResult::Boolean(val) => Ok(EvalResult::Boolean(!val)),
+                    _ => {
+                        return Err(PseudoError::TypeError(
+                            "Not must be followed by boolean expression".to_string(),
+                        ))
+                    }
+                }
+            }
             Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
             Expr::Boolean(val) => Ok(EvalResult::Boolean(*val)),
             Expr::Comparison(left, op, right) => self.evaluate_comparison(left, op, right),
@@ -38,7 +49,11 @@ impl EvalExpression for Evaluator {
                 if let Some(array) = self.array_table.get(var).cloned() {
                     let index = match self.evaluate_expr(&index)? {
                         EvalResult::Number(val) => val as usize,
-                        _ => return Err(PseudoError::ValueError("Invalid indexing of array".to_string())),
+                        _ => {
+                            return Err(PseudoError::ValueError(
+                                "Invalid indexing of array".to_string(),
+                            ))
+                        }
                     };
                     Ok(array.get(index).expect("Subscript out of range").clone())
                 } else {

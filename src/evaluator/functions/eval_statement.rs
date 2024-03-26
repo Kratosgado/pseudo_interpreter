@@ -21,11 +21,13 @@ impl EvalStatement for Evaluator {
                 Ok(())
             }
             Statement::Print(expr) => Ok({
-                let exprs = destruct_multi(expr)?;
-                for expr in exprs {
+                let exprs: Vec<Expr> = destruct_multi(expr)?;
+                for expr in &exprs {
                     print!("{}", self.evaluate_expr(&expr)?);
                 }
-                println!();
+                if exprs.len() == 1 {
+                    println!()
+                }
                 self.next_statement();
             }),
             Statement::Assignment(var, expr) => Ok({
@@ -98,11 +100,13 @@ impl EvalStatement for Evaluator {
                 self.evaluate_expr(expr)?;
             }
             Statement::Print(expr) => {
-                let exprs = destruct_multi(expr)?;
-                for expr in exprs {
+                let exprs: Vec<Expr> = destruct_multi(expr)?;
+                for expr in &exprs {
                     print!("{}", self.evaluate_expr(&expr)?);
                 }
-                println!();
+                if exprs.len() == 1 {
+                    println!()
+                }
             }
             Statement::Assignment(var, expr) => {
                 let value = self.evaluate_expr(expr)?;

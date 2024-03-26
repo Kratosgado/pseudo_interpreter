@@ -9,6 +9,9 @@ pub enum Expr {
     Boolean(bool),
     Variable(String),
     ArrayVariable(String, Box<Expr>),
+    
+    // unary
+    Not(Box<Expr>),
 
     // multi 
     Multi(Vec<Expr>),
