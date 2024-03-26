@@ -1,6 +1,18 @@
-x = 5
-if not x < 4 then 
-    print "not "
-else 
-    print "yes"
-endif
+reverse = true
+lines = 5
+
+while lines > 0 do
+    if reverse then
+        for counter = 5 to 1 step -1 do
+            print counter, " "
+        endfor
+        reverse = false
+    else 
+        for counter = 1 to 5 do
+            print counter, " "
+        endfor
+        reverse = true
+    endif 
+    print ""
+    lines = lines - 1
+endwhile
