@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use pseudo_interpreter::{constants::error_handler::PseudoError, Evaluator, Lexer, Parser};
+    use pseudo_interpreter::{ Evaluator, Lexer, Parser};
     use std::fs;
 
     #[test]
@@ -53,7 +53,7 @@ mod tests {
         assert_eq!(tokens.is_err(), false);
         let mut parser = Parser::new(tokens.unwrap());
         let tree = parser.parse();
-        assert_eq!(tree.is_ok(), false);
+        assert_eq!(tree.is_ok(), true);
         let mut eval = Evaluator::new(tree.unwrap());
         assert_eq!(eval.evaluate().is_ok(), false);
     }

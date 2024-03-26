@@ -1,5 +1,7 @@
 known bugs:
     require endfunction keywords
+    stepping negatives
+    evaluating multi expressions
     
 to be implemented:
     disallow naming variables with keywords

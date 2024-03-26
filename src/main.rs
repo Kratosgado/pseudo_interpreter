@@ -2,7 +2,7 @@ use pseudo_interpreter::{constants::error_handler::PseudoError, Evaluator, Lexer
 
 use std::{env, fs};
 
-fn main() -> Result<(), PseudoError>{
+fn main() -> Result<(), PseudoError> {
     let args: Vec<String> = env::args().collect();
     if args.len() != 2 {
         eprintln!("Usage: pseudo_interpreter <file_path>");
