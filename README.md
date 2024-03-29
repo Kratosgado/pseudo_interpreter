@@ -6,7 +6,8 @@ A pseudocode interpreter written in rust.
 
 ## Installation
 
-- todo
+- This application has been bundled up into vscode extension and can
+- be installed by searching pseudo runner in vscode extensions
 
 ## Implemented Features
 
@@ -14,6 +15,7 @@ A pseudocode interpreter written in rust.
 - input function
 - variable assignment
 - expressions
+- if statements
 - arrays
 - for loops
 - while loops

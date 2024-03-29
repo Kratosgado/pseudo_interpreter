@@ -3,7 +3,6 @@ known bugs:
     
 to be implemented:
     disallow naming variables with keywords
-    else if
     control structures:
         Continue,
         Break,
