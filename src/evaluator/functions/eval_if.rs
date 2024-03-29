@@ -8,7 +8,7 @@ pub trait EvalIf {
 
 impl EvalIf for Evaluator {
     fn eval_if(&mut self, statement: &Statement) -> Result<(), PseudoError> {
-        Ok(if let Statement::Ifs(ifstructure) = statement {
+        Ok(if let Statement::If(ifstructure) = statement {
             let first_if = &ifstructure.ifcond;
             let cond = self.evaluate_expr(&first_if.cond)?;
             if let EvalResult::Boolean(true) = cond {
@@ -16,20 +16,15 @@ impl EvalIf for Evaluator {
                     self.evaluate_statement(statement)?;
                 }
             } else {
-                let mut matched = false;
                 if let Some(elseifs) = &ifstructure.elseifs {
-                    let mut i = 0;
-                   loop {
-                       let elseif = &elseifs[i];
-                       if EvalResult::Boolean(true) == self.evaluate_expr(&elseif.cond)? {
-                            matched = true;
-                           for statement  in elseif.consequence.iter() {
-                               self.evaluate_statement(statement)?;
-                           }
-                           return Ok(());
-                       }
-                       i += 1;
-                   }
+                    for elseif in elseifs.iter() {
+                        if EvalResult::Boolean(true) == self.evaluate_expr(&elseif.cond)? {
+                            for statement  in elseif.consequence.iter() {
+                                self.evaluate_statement(statement)?;
+                            }
+                            return Ok(());
+                        }
+                    }
                 }
                 if let Some(alternative) = &ifstructure.alternative{
                     for statement in alternative.iter() {

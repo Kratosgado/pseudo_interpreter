@@ -55,7 +55,7 @@ impl ParseIf for Parser {
                 alternative: Some(alternative),
             };
 
-            Ok(Statement::Ifs(ifstruct))
+            Ok(Statement::If(ifstruct))
         } else {
             return Err(PseudoError::keyword(
                 vec![Token::Then],

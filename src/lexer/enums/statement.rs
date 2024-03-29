@@ -15,8 +15,7 @@ pub enum Statement {
     DeclareArray(String, Expr),
     AssignIndex(String, Expr, Expr),
 
-    If(Expr, Box<Vec<Statement>>, Option<Box<Vec<Statement>>>),
-    Ifs(IfStructure),
+    If(IfStructure),
 
     While(Expr, Box<Vec<Statement>>),
     For(Expr, Option<Expr>, Expr, Expr, Box<Vec<Statement>>),

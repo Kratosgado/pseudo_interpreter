@@ -44,7 +44,7 @@ impl EvalStatement for Evaluator {
                 }
                 self.symbol_table.insert(var.clone(), value);
             }),
-            Statement::If(_, _, _) => self.eval_if(statement),
+            Statement::If(_) => self.eval_if(statement),
             Statement::While(_, _) => self.eval_while(statement),
             Statement::For(_, _, _, _, _) => self.eval_for(statement),
             Statement::Input(var) => {
@@ -91,7 +91,6 @@ impl EvalStatement for Evaluator {
             }
             Statement::Declare(var, datatype) => self.eval_declare(var, datatype),
             Statement::None => Ok(self.next_statement()),
-            Statement::Ifs(_) => self.eval_if(statement),
         }
     }
 
@@ -113,7 +112,7 @@ impl EvalStatement for Evaluator {
                 let value = self.evaluate_expr(expr)?;
                 self.symbol_table.insert(var.clone(), value);
             }
-            Statement::If(_, _, _) => self.eval_if(statement)?,
+            Statement::If(_) => self.eval_if(statement)?,
             Statement::While(_, _) => self.eval_while(statement)?,
             Statement::For(_, _, _, _, _) => self.eval_for(statement)?,
             Statement::Input(var) => {
@@ -134,7 +133,6 @@ impl EvalStatement for Evaluator {
             }
             Statement::Declare(_, _) => unimplemented!(),
             Statement::None => self.next_statement(),
-            Statement::Ifs(_) => todo!(),
         }
         Ok(())
     }
