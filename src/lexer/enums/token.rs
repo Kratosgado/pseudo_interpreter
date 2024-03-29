@@ -59,6 +59,7 @@ pub enum Token {
 
     // control tokens
     If,
+    ElseIf,
     Else,
     EndIf,
     Then,
@@ -144,6 +145,7 @@ impl fmt::Display for Token {
             Token::Continue => write!(f, "Continue"),
             Token::Break => write!(f, "Break"),
             Token::Comma => write!(f, ","),
+            Token::ElseIf => write!(f, "Elseif"),
             
         }
     }

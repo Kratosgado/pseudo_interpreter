@@ -54,6 +54,7 @@ impl<'a> Identifier for Lexer<'a> {
 
             // decision making
             "if" => Token::If,
+            "elseif" => Token::ElseIf,
             "then" => Token::Then,
             "endif" => Token::EndIf,
             "else" => Token::Else,

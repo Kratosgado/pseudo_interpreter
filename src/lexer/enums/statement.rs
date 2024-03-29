@@ -14,10 +14,25 @@ pub enum Statement {
     AssignArray(String, Expr, Expr),
     DeclareArray(String, Expr),
     AssignIndex(String, Expr, Expr),
-        
-    If( Expr, Box<Vec<Statement>>,Option<Box<Vec<Statement>>>),
+
+    If(Expr, Box<Vec<Statement>>, Option<Box<Vec<Statement>>>),
+    Ifs(IfStructure),
+
     While(Expr, Box<Vec<Statement>>),
     For(Expr, Option<Expr>, Expr, Expr, Box<Vec<Statement>>),
 
-    Function(String,Vec<Expr>, Box<Vec<Statement>>, Option<Expr>),
+    Function(String, Vec<Expr>, Box<Vec<Statement>>, Option<Expr>),
+}
+
+#[derive(Debug, Clone)]
+pub struct IfStructure {
+    pub ifcond: IfCond,
+    pub elseifs: Option<Vec<IfCond>>,
+    pub alternative: Option<Vec<Statement>>,
+}
+
+#[derive(Debug, Clone)]
+pub struct IfCond {
+    pub cond: Expr,
+    pub consequence: Vec<Statement>,
 }
