@@ -36,9 +36,9 @@ impl ParseFunction for Parser {
                 if self.current_token == Some(Token::Return) {
                     self.next_token();
                     ret_ment = Some(self.parse_expr()?);
-                    self.next_token();
+                    let _ = self.parse_token(vec![Token::EndFunction])?;
+
                 }
-                self.next_token();
                 Ok(Statement::Function(name.clone(), params, Box::new(fstatements), ret_ment))
             } else {
                 return Err(PseudoError::keyword(vec![Token::LParen], &self.current_token.as_ref().unwrap()));

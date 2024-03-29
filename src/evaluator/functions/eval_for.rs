@@ -3,7 +3,7 @@ use crate::{
     evaluator::{eval_result::Operation, Expr},
 };
 
-use super::super::{EvalExpression, EvalResult, EvalStatement, Evaluator, Statement};
+use super::super::{EvalExpression, EvalStatement, Evaluator, Statement};
 pub trait EvalFor {
     fn eval_for(&mut self, statement: &Statement) -> Result<(), PseudoError>;
 }

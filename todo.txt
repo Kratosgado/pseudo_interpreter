@@ -1,9 +1,9 @@
 known bugs:
-    require endfunction keywords
     terminate infinite loops
     
 to be implemented:
     disallow naming variables with keywords
+    else if
     control structures:
         Continue,
         Break,

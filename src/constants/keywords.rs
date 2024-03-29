@@ -1,6 +1,15 @@
-pub const KEYWORDS: [&str; 45] = [
-    "as", "break", "const", "continue", "else", "enum", "class", "false", "function", "for", "if",
-    "impl", "in", "let", "loop", "return", "struct", "true", "where", "while", "do", "typeof",
-    "repeat", "until", "match", "case", "when", "default", "try", "catch", "finally", "not", "and",
-    "or", "xor", "is", "as", "in", "not", "and", "or", "xor", "is", "as", "in",
+pub const KEYWORDS: [&str; 29] = [
+    // types
+    "string", "integer", "double", "boolean", "true", "false",
+    
+    // decision making
+    "if", "else", "endif", "then",
+
+    // loops
+    "while", "endwhile", "for", "to", "step", "do", "endfor", 
+
+    // functions
+    "function", "endfunction", "return", "break", "print", "get", "receive", "input", "display", "output",
+    "declare", "as"
+ 
 ];
