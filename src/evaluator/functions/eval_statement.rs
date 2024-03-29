@@ -91,7 +91,7 @@ impl EvalStatement for Evaluator {
             }
             Statement::Declare(var, datatype) => self.eval_declare(var, datatype),
             Statement::None => Ok(self.next_statement()),
-            Statement::Ifs(_) => todo!(),
+            Statement::Ifs(_) => self.eval_if(statement),
         }
     }
 
