@@ -1,5 +1,3 @@
-
-
 use crate::{
     constants::error_handler::{KeywordError, PseudoError},
     parser::{ParseArray, ParseFunction, ParseInput},
@@ -38,6 +36,10 @@ impl ParseToken for Parser {
                 }
                 Token::Declare => statements.push(self.parse_declare()?),
                 Token::RParen => self.next_token(),
+                Token::Break => {
+                    self.next_token();
+                    statements.push(Statement::Break);
+                }
                 _ => return Err(PseudoError::keyword(terminators, &token)),
             }
         }

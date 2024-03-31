@@ -18,6 +18,7 @@ pub enum Statement {
     If(IfStructure),
 
     While(Expr, Box<Vec<Statement>>),
+    Break,
     For(Expr, Option<Expr>, Expr, Expr, Box<Vec<Statement>>),
 
     Function(String, Vec<Expr>, Box<Vec<Statement>>, Option<Expr>),

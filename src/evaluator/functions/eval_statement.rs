@@ -91,6 +91,7 @@ impl EvalStatement for Evaluator {
             }
             Statement::Declare(var, datatype) => self.eval_declare(var, datatype),
             Statement::None => Ok(self.next_statement()),
+            Statement::Break => return Ok(()),
         }
     }
 
@@ -133,6 +134,7 @@ impl EvalStatement for Evaluator {
             }
             Statement::Declare(_, _) => unimplemented!(),
             Statement::None => self.next_statement(),
+            Statement::Break => return Ok(()),
         }
         Ok(())
     }
