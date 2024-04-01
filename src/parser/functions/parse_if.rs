@@ -37,8 +37,6 @@ impl ParseIf for Parser {
 
                         if Some(Token::Then) == self.current_token {
                             self.next_token();
-                            self.next_token();
-                            self.next_token();
                             let conseq =
                                 self.parse_token(vec![Token::EndIf, Token::Else, Token::ElseIf])?;
                             elseifs.push(IfCond {

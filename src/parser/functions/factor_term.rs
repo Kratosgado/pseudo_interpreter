@@ -20,14 +20,16 @@ impl ParseFactorTerm for Parser {
                 | Token::GreaterThanEqual
                 | Token::NotEqual => {
                     left = self.parse_comparison(left)?;
-                    let op = if matches!(self.current_token, Some(Token::And)) {
-                        Operator::And
-                    } else {
-                        Operator::Or
-                    };
-                    self.next_token();
-                    let right = self.parse_expr()?;
-                    left = Expr::MultiCondition(Box::new(left), op, Box::new(right));
+                    if Some(Token::And) == self.current_token || Some(Token::Or) == self.current_token {
+                        let op = if matches!(self.current_token, Some(Token::And)) {
+                            Operator::And
+                        } else {
+                            Operator::Or
+                        };
+                        self.next_token();
+                        let right = self.parse_expr()?;
+                        left = Expr::MultiCondition(Box::new(left), op, Box::new(right));
+                    }
                 }
                 Token::Multiply | Token::Divide | Token::Modulo => {
                     let op = if matches!(token, Token::Multiply) {
