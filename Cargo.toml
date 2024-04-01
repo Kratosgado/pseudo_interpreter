@@ -1,6 +1,6 @@
 [package]
 name = "pseudo_interpreter"
-version = "1.1.4"
+version = "1.1.5"
 edition = "2021"
 authors = ["Prince Mbeah Essilfie <mbeahessilfieprince@gmail.com>"]
 license = "MIT OR Apache-2.0"

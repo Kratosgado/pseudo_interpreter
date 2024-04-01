@@ -16,6 +16,7 @@ A pseudocode interpreter written in rust.
 - variable assignment
 - expressions
 - if statements
+- multi conditional statements
 - arrays
 - for loops
 - while loops
