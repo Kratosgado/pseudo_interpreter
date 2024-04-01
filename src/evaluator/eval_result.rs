@@ -37,6 +37,8 @@ pub trait Operation {
     fn not_equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     fn greater_or_equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     fn less_or_equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn and(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn or(&self, other: &Self) -> Result<EvalResult, PseudoError>;
 }
 
 impl Operation for EvalResult {
@@ -127,6 +129,19 @@ impl Operation for EvalResult {
         match (self, other) {
             (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Boolean(n1 <= n2)),
             (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Boolean(n1 <= n2)),
+            _ => return Err(PseudoError::InvalidOperation),
+        }
+    }
+    fn and(&self, other: &Self) -> Result<EvalResult, PseudoError> {
+        match (self, other) {
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 & n2)),
+            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => Ok(EvalResult::Boolean(b1 & b2)),
+            _ => return Err(PseudoError::InvalidOperation),
+        }
+    }fn or(&self, other: &Self) -> Result<EvalResult, PseudoError> {
+        match (self, other) {
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 | n2)),
+            (EvalResult::Boolean(b1), EvalResult::Boolean(b2)) => Ok(EvalResult::Boolean(b1 | b2)),
             _ => return Err(PseudoError::InvalidOperation),
         }
     }

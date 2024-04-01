@@ -14,7 +14,7 @@ fn main() -> Result<(), PseudoError> {
         Ok(inputs) => {
             let mut lexer = Lexer::new(inputs);
             let tokens = lexer.tokenize()?;
-            // println!("Tokens: {:?}", tokens); // Debug
+            println!("Tokens: {:?}", tokens); // Debug
 
             let mut parser = Parser::new(tokens);
             let parsed_token = parser.parse()?;

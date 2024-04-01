@@ -11,14 +11,15 @@ impl EvalIf for Evaluator {
         Ok(if let Statement::If(ifstructure) = statement {
             let first_if = &ifstructure.ifcond;
             let cond = self.evaluate_expr(&first_if.cond)?;
-            if let EvalResult::Boolean(true) = cond {
+            if  EvalResult::Boolean(true) == cond || EvalResult::Number(1) == cond {
                 for statement in first_if.consequence.iter() {
                     self.evaluate_statement(statement)?;
                 }
             } else {
                 if let Some(elseifs) = &ifstructure.elseifs {
                     for elseif in elseifs.iter() {
-                        if EvalResult::Boolean(true) == self.evaluate_expr(&elseif.cond)? {
+                        let cond = self.evaluate_expr(&elseif.cond)? ;
+                        if EvalResult::Boolean(true) == cond || EvalResult::Number(1) == cond {
                             for statement  in elseif.consequence.iter() {
                                 self.evaluate_statement(statement)?;
                             }

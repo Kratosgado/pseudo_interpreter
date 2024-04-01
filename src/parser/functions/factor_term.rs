@@ -20,6 +20,14 @@ impl ParseFactorTerm for Parser {
                 | Token::GreaterThanEqual
                 | Token::NotEqual => {
                     left = self.parse_comparison(left)?;
+                    let op = if matches!(self.current_token, Some(Token::And)) {
+                        Operator::And
+                    } else {
+                        Operator::Or
+                    };
+                    self.next_token();
+                    let right = self.parse_expr()?;
+                    left = Expr::MultiCondition(Box::new(left), op, Box::new(right));
                 }
                 Token::Multiply | Token::Divide | Token::Modulo => {
                     let op = if matches!(token, Token::Multiply) {
@@ -117,7 +125,7 @@ impl ParseFactorTerm for Parser {
                     return Err(PseudoError::ValueError("Invalid array index".to_string()));
                 };
                 Ok(Expr::ArrayVariable(var, Box::new(index)))
-            }
+            },
             Some(token) => todo!("Implement parsing of {:?}", token),
             None => return Err(PseudoError::UnexpectedEOF),
         }

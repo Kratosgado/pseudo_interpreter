@@ -1,4 +1,4 @@
-use crate::constants::error_handler::PseudoError;
+use crate::{constants::error_handler::PseudoError, evaluator::MultiCondition};
 
 use super::super::{Arithmetics, CallFunc, Comparison, EvalResult, Evaluator, Expr};
 
@@ -45,6 +45,7 @@ impl EvalExpression for Evaluator {
             Expr::BinOp(left, op, right) => self.arithmetic_expr(left, op, right),
             Expr::Boolean(val) => Ok(EvalResult::Boolean(*val)),
             Expr::Comparison(left, op, right) => self.evaluate_comparison(left, op, right),
+            Expr::MultiCondition(left, op, right ) => self.evaluate_multi_condition(left, op, right),
             Expr::ArrayVariable(var, index) => {
                 if let Some(array) = self.array_table.get(var).cloned() {
                     let index = match self.evaluate_expr(&index)? {

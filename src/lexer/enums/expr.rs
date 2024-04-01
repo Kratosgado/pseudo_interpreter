@@ -12,6 +12,7 @@ pub enum Expr {
     
     // unary
     Not(Box<Expr>),
+    MultiCondition(Box<Expr>,Operator, Box<Expr>),
 
     // multi 
     Multi(Vec<Expr>),
