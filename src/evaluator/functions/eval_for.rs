@@ -33,7 +33,7 @@ impl EvalFor for Evaluator {
             while let Some(value) = self.symbol_table.get(&var) {
                 if value != &end {
                     for statement in fstatement.iter() {
-                        self.eval_not_next_statement(statement)?;
+                        self.eval_not_next_statement(statement, false)?;
                     }
                     let value = self.symbol_table.get(&var).unwrap();
                     let value = value.add(&step)?;
@@ -41,7 +41,7 @@ impl EvalFor for Evaluator {
                     self.symbol_table.insert(var.clone(), value);
                 } else {
                     for statement in fstatement.iter() {
-                        self.eval_not_next_statement(statement)?;
+                        self.eval_not_next_statement(statement, false)?;
                     }
                     break;
                 }

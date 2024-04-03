@@ -8,7 +8,7 @@ use super::super::{
     Statement,
 };
 pub trait EvalStatement {
-    fn eval_not_next_statement(&mut self, statement: &Statement) -> Result<(), PseudoError>;
+    fn eval_not_next_statement(&mut self, statement: &Statement, callnext: bool) -> Result<(), PseudoError>;
     fn evaluate_statement(&mut self, statement: &Statement) -> Result<(), PseudoError>;
 }
 
@@ -44,7 +44,7 @@ impl EvalStatement for Evaluator {
                 }
                 self.symbol_table.insert(var.clone(), value);
             }),
-            Statement::If(_) => self.eval_if(statement),
+            Statement::If(_) => self.eval_if(statement, true),
             Statement::While(_, _) => self.eval_while(statement),
             Statement::For(_, _, _, _, _) => self.eval_for(statement),
             Statement::Input(var) => {
@@ -95,7 +95,7 @@ impl EvalStatement for Evaluator {
         }
     }
 
-    fn eval_not_next_statement(&mut self, statement: &Statement) -> Result<(), PseudoError> {
+    fn eval_not_next_statement(&mut self, statement: &Statement, callnext: bool) -> Result<(), PseudoError> {
         match statement {
             Statement::Expr(expr) => {
                 self.evaluate_expr(expr)?;
@@ -113,7 +113,7 @@ impl EvalStatement for Evaluator {
                 let value = self.evaluate_expr(expr)?;
                 self.symbol_table.insert(var.clone(), value);
             }
-            Statement::If(_) => self.eval_if(statement)?,
+            Statement::If(_) => self.eval_if(statement, callnext)?,
             Statement::While(_, _) => self.eval_while(statement)?,
             Statement::For(_, _, _, _, _) => self.eval_for(statement)?,
             Statement::Input(var) => {
@@ -130,11 +130,13 @@ impl EvalStatement for Evaluator {
                 for expr in exprs {
                     print!("{}", self.evaluate_expr(expr)?)
                 }
-                self.next_statement();
             }
             Statement::Declare(_, _) => unimplemented!(),
             Statement::None => self.next_statement(),
             Statement::Break => return Ok(()),
+        }
+        if callnext {
+            self.next_statement();
         }
         Ok(())
     }

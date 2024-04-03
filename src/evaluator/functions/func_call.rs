@@ -29,7 +29,7 @@ impl CallFunc for Evaluator {
                 }
             }
             for statement in func.statements.iter() {
-                self.eval_not_next_statement(statement)?;
+                self.eval_not_next_statement(statement, false)?;
             }
             match func.ret_ment {
                 Some(expr) => self.evaluate_expr(&expr),
