@@ -17,10 +17,9 @@ impl EvalWhile for Evaluator {
                 // let mut condition = self.evaluate_expr(condition);
                 while let Ok(EvalResult::Boolean(true)) = self.evaluate_expr(condition) {
                     for statement in wstatements.iter() {
-                        self.eval_not_next_statement(statement, false)?;
+                        self.evaluate_statement(statement, false)?;
                     }
                 }
-                self.next_statement();
             },
         )
     }

@@ -17,7 +17,6 @@ impl EvalFunction for Evaluator {
                 ret_ment: ret_ment.clone(),
             };
             self.function_args.insert(name.clone(), func_args);
-            self.next_statement();
         }
         Ok(())
     }

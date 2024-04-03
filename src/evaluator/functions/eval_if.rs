@@ -13,7 +13,7 @@ impl EvalIf for Evaluator {
             let cond = self.evaluate_expr(&first_if.cond)?;
             if EvalResult::Boolean(true) == cond || EvalResult::Number(1) == cond {
                 for statement in first_if.consequence.iter() {
-                    self.eval_not_next_statement(statement, callnext)?;
+                    self.evaluate_statement(statement, callnext)?;
                 }
             } else {
                 if let Some(elseifs) = &ifstructure.elseifs {
@@ -21,7 +21,7 @@ impl EvalIf for Evaluator {
                         let cond = self.evaluate_expr(&elseif.cond)?;
                         if EvalResult::Boolean(true) == cond || EvalResult::Number(1) == cond {
                             for statement in elseif.consequence.iter() {
-                                self.eval_not_next_statement(statement, callnext)?;
+                                self.evaluate_statement(statement, callnext)?;
                             }
                             return Ok(());
                         }
@@ -29,7 +29,7 @@ impl EvalIf for Evaluator {
                 }
                 if let Some(alternative) = &ifstructure.alternative {
                     for statement in alternative.iter() {
-                        self.eval_not_next_statement(statement, callnext)?;
+                        self.evaluate_statement(statement, callnext)?;
                     }
                 }
             }

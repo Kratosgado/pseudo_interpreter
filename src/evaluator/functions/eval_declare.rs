@@ -15,7 +15,6 @@ impl EvalDeclare for Evaluator {
             _ => return Err(PseudoError::TypeError("Invalid datatype".to_string())),
         };
         self.symbol_table.insert(var.clone(), datatype);
-        self.next_statement();
         Ok(())
     }
 }
