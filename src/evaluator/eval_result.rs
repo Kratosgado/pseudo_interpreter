@@ -27,10 +27,10 @@ impl EvalResult {
 }
 pub trait Operation {
     fn add(&self, other: &Self) -> Result<EvalResult, PseudoError>;
-    fn subtract(&self, other: &Self) -> Result<EvalResult, PseudoError>;
-    fn multiply(&self, other: &Self) -> Result<EvalResult, PseudoError>;
-    fn divide(&self, other: &Self) -> Result<EvalResult, PseudoError>;
-    fn modulo(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    // fn subtract(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    // fn multiply(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    // fn divide(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    // fn modulo(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     fn greater_than(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     fn less_than(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     fn equal(&self, other: &Self) -> Result<EvalResult, PseudoError>;
@@ -51,37 +51,37 @@ impl Operation for EvalResult {
         }
     }
 
-    fn subtract(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
-        match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 - n2)),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 - n2)),
-            _ => return Err(PseudoError::InvalidOperation),
-        }
-    }
+    // fn subtract(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
+    //     match (self, other) {
+    //         (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 - n2)),
+    //         (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 - n2)),
+    //         _ => return Err(PseudoError::InvalidOperation),
+    //     }
+    // }
 
-    fn multiply(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
-        match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 * n2)),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 * n2)),
-            _ => return Err(PseudoError::InvalidOperation),
-        }
-    }
+    // fn multiply(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
+    //     match (self, other) {
+    //         (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 * n2)),
+    //         (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 * n2)),
+    //         _ => return Err(PseudoError::InvalidOperation),
+    //     }
+    // }
 
-    fn divide(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
-        match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 / n2)),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 / n2)),
-            _ => return Err(PseudoError::InvalidOperation),
-        }
-    }
+    // fn divide(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
+    //     match (self, other) {
+    //         (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 / n2)),
+    //         (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 / n2)),
+    //         _ => return Err(PseudoError::InvalidOperation),
+    //     }
+    // }
 
-    fn modulo(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
-        match (self, other) {
-            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 % n2)),
-            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 % n2)),
-            _ => return Err(PseudoError::InvalidOperation),
-        }
-    }
+    // fn modulo(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
+    //     match (self, other) {
+    //         (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 % n2)),
+    //         (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 % n2)),
+    //         _ => return Err(PseudoError::InvalidOperation),
+    //     }
+    // }
 
     fn greater_than(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
         match (self, other) {
