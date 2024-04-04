@@ -47,28 +47,40 @@ impl EvalStatement for Evaluator {
                 std::io::stdin().read_line(&mut input).unwrap();
                 let mut value: EvalResult = EvalResult::Str(input.trim().to_string());
                 if let Some(val) = self.symbol_table.get(var) {
-                    if val.get_type() == "int" {
-                        value = EvalResult::Number(
-                            input
-                                .trim()
-                                .parse()
-                                .expect("Invalid input: Expected integer"),
-                        );
-                    } else if val.get_type() == "double" {
-                        value = EvalResult::Double(
-                            input
-                                .trim()
-                                .parse()
-                                .expect("Invalid input: Expected double"),
-                        );
-                    } else {
-                        return Err(PseudoError::TypeError(format!(
+                    match val.get_type().as_str() {
+                        "int" => {
+                            value = EvalResult::Number(
+                                input
+                                    .trim()
+                                    .parse()
+                                    .map_err(|_| PseudoError::TypeError("expected integer".to_string()))?,
+                            );
+                        }
+                        "double" => {
+                            value = EvalResult::Double(
+                                input
+                                    .trim()
+                                    .parse()
+                                    .map_err(|_| PseudoError::TypeError("expected double".to_string()))?,
+                            );
+                        }
+                        "bool" => {
+                            value = EvalResult::Boolean(
+                                input
+                                    .trim()
+                                    .parse()
+                                    .map_err(|_| PseudoError::TypeError("expected boolean".to_string()))?,
+                            );
+                        }
+                        "str" => {}
+                        _ => return Err(PseudoError::TypeError(format!(
                             "expected {}, found {}",
                             val.get_type(),
                             value.get_type()
-                        )));
+                        ))),
+                    }  
                     }
-                }
+                    
                 self.symbol_table.insert(var.clone(), value.clone());
             }
             Statement::AssignArray(_, _, _)
