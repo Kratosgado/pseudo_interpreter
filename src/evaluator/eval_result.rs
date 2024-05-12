@@ -27,6 +27,7 @@ impl EvalResult {
 }
 pub trait Operation {
     fn add(&self, other: &Self) -> Result<EvalResult, PseudoError>;
+    fn power(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     // fn subtract(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     // fn multiply(&self, other: &Self) -> Result<EvalResult, PseudoError>;
     // fn divide(&self, other: &Self) -> Result<EvalResult, PseudoError>;
@@ -47,6 +48,13 @@ impl Operation for EvalResult {
             (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1 + n2)),
             (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1 + n2)),
             (EvalResult::Str(s1), EvalResult::Str(s2)) => Ok(EvalResult::Str(format!("{}{}", s1, s2))),
+            _ => return Err(PseudoError::InvalidOperation),
+        }
+    }
+    fn power(&self, other: &EvalResult) -> Result<EvalResult, PseudoError> {
+        match (self, other) {
+            (EvalResult::Number(n1), EvalResult::Number(n2)) => Ok(EvalResult::Number(n1.pow((*n2) as u32))),
+            (EvalResult::Double(n1), EvalResult::Double(n2)) => Ok(EvalResult::Double(n1.powf(*n2))),
             _ => return Err(PseudoError::InvalidOperation),
         }
     }

@@ -1,15 +1,14 @@
 use crate::constants::error_handler::PseudoError;
-
 use super::{eval_result::EvalResult, EvalStatement, Expr, Statement};
-
 use std::collections::HashMap;
 
-pub type IFunc = dyn FnMut(&mut Evaluator, &Vec<Expr>, &Box<Vec<Statement>>,  &Option<Expr>) -> Option<Expr>;
+pub type IFunc =
+    dyn FnMut(&mut Evaluator, &Vec<Expr>, &Box<Vec<Statement>>, &Option<Expr>) -> Option<Expr>;
 #[derive(Clone)]
 pub struct FuncArgs {
-    pub params: Vec<Expr>, 
+    pub params: Vec<Expr>,
     pub statements: Box<Vec<Statement>>,
-    pub ret_ment:  Option<Expr>
+    pub ret_ment: Option<Expr>,
 }
 pub struct Evaluator {
     statements: Vec<Statement>,
@@ -17,7 +16,7 @@ pub struct Evaluator {
     position: usize,
     pub symbol_table: HashMap<String, EvalResult>,
     pub array_table: HashMap<String, Vec<EvalResult>>,
-    pub function_args: HashMap<String, FuncArgs>
+    pub function_args: HashMap<String, FuncArgs>,
 }
 
 impl Evaluator {
@@ -45,7 +44,7 @@ impl Evaluator {
 
     pub fn evaluate(&mut self) -> Result<(), PseudoError> {
         while let Some(statement) = self.current_statement.take() {
-             self.evaluate_statement(&statement, true)?;
+            self.evaluate_statement(&statement, true)?;
         }
         Ok(())
     }
