@@ -40,6 +40,8 @@ impl<'a> Identifier for Lexer<'a> {
             "true" => Token::Boolean(true),
             "false" => Token::Boolean(false),
 
+            // "pow" | "power" | "exp" => Token::Power,
+
             "declare" => Token::Declare,
             "as" => Token::As,
             "integer" => Token::Integer,

@@ -26,6 +26,7 @@ pub enum Token {
     Divide,
     Modulo,
     FloorDivide,
+    // Power,
 
     // brackets and parenthesis
     LParen,
@@ -146,6 +147,7 @@ impl fmt::Display for Token {
             Token::Break => write!(f, "Break"),
             Token::Comma => write!(f, ","),
             Token::ElseIf => write!(f, "Elseif"),
+            // Token::Power => write!(f, "Power"),
             
         }
     }

@@ -1,4 +1,4 @@
-use crate::constants::error_handler::PseudoError;
+use crate::{constants::error_handler::PseudoError, evaluator::eval_result::Operation};
 
 use super::{
     super::{EvalExpression, EvalResult, EvalStatement, Evaluator, Expr},
@@ -11,7 +11,25 @@ pub trait CallFunc {
 
 impl CallFunc for Evaluator {
     fn call_func(&mut self, name: &String, args: &Option<Expr>) -> Result<EvalResult, PseudoError> {
-        if let Some(func) = self.function_args.get(name).cloned() {
+        if vec!["pow", "power", "exp"].contains(&name.to_lowercase().as_str()) {
+            let mut arg = vec![];
+            match args {
+                Some(p) => {
+                    arg = destruct_multi(p)?;
+                }
+                None => {}
+            };
+            if arg.len() != 2 {
+                return Err(PseudoError::VariableError(format!(
+                    "expected {} arguments, found {}",
+                    2,
+                    arg.len()
+                )));
+            }
+            let power = self.evaluate_expr(&arg.pop().unwrap())?;
+            let base = self.evaluate_expr(&arg.pop().unwrap())?;
+            Ok(base.power(&power)?)
+        }else if let Some(func) = self.function_args.get(name).cloned() {
             let mut arg = vec![];
             match args {
                 Some(p) => {
@@ -26,6 +44,7 @@ impl CallFunc for Evaluator {
                     arg.len()
                 )));
             }
+
             let mut iter = 0;
             while iter < arg.len() {
                 let var = &func.params[iter];
