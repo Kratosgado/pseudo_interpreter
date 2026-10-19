@@ -1,0 +1,12 @@
+# A function's parameters and locals must not touch the caller's variables.
+n = 100
+helper = 7
+
+function shadow(n)
+    helper = n * 2
+    return helper
+endfunction
+
+print shadow(3)
+print n
+print helper

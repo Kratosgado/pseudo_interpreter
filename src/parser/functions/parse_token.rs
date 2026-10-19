@@ -16,7 +16,7 @@ impl ParseToken for Parser {
         let mut statements: Vec<Statement> = Vec::new();
         while let Some(token) = &self.current_token {
             if terminators.contains(token) {
-                if token != &Token::Else && token != &Token::ElseIf && token != &Token::Return {
+                if token != &Token::Else && token != &Token::ElseIf {
                     self.next_token();
                 }
                 break;
@@ -30,6 +30,7 @@ impl ParseToken for Parser {
                 Token::If => statements.push(self.parse_if()?),
                 Token::For => statements.push(self.parse_for()?),
                 Token::Function => statements.push(self.parse_function()?),
+                Token::Return => statements.push(self.parse_return()?),
                 Token::EOL => self.next_token(),
                 Token::Number(_) | Token::Str(_) | Token::Boolean(_) => {
                     statements.push(Statement::Expr(self.parse_expr()?))

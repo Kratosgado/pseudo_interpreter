@@ -14,7 +14,7 @@ impl EvalDeclare for Evaluator {
             "double" => EvalResult::Double(0.0),
             _ => return Err(PseudoError::TypeError("Invalid datatype".to_string())),
         };
-        self.symbol_table.insert(var.clone(), datatype);
+        self.set_var(var.clone(), datatype);
         Ok(())
     }
 }

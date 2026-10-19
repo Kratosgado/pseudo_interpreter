@@ -20,13 +20,12 @@ impl EvalArray for Evaluator {
                 for value in values.iter() {
                     arr_values.push(self.evaluate_expr(value)?)
                 }
-                self.array_table.insert(var.clone(), arr_values);
+                self.set_array(var.clone(), arr_values);
             }),
             Statement::DeclareArray(var, size) => {
                 let size = self.evaluate_expr(size)?;
                 if let EvalResult::Number(size) = size {
-                    self.array_table
-                        .insert(var.clone(), vec![EvalResult::Null; size as usize]);
+                    self.set_array(var.clone(), vec![EvalResult::Null; size as usize]);
                     Ok(())
                 } else {
                     return Err(PseudoError::AssignmentError(
@@ -37,13 +36,19 @@ impl EvalArray for Evaluator {
             Statement::AssignIndex(var, index, value) => {
                 let index = self.evaluate_expr(index)?;
                 let value = self.evaluate_expr(value)?;
-                if let Some(arr) = self.array_table.get_mut(var) {
+                if let Some(arr) = self.get_array_mut(var) {
                     if let EvalResult::Number(index) = index {
                         arr[index as usize] = value;
                         Ok(())
                     } else {
                         return Err(PseudoError::ValueError("Invalid index".to_string()));
                     }
+                } else if self.get_array(var).is_some() {
+                    // It exists, but only outside this call.
+                    return Err(PseudoError::VariableError(format!(
+                        "cannot assign to array '{}' from inside a function: it belongs to an outer scope",
+                        var
+                    )));
                 } else {
                     return Err(PseudoError::VariableError(format!(
                         "undefined array: {}",

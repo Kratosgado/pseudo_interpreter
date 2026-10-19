@@ -1,0 +1,12 @@
+# Return from inside a for loop exits the whole call immediately.
+function stop_at(target)
+    for i = 1 to 10 do
+        print i
+        if i == target then
+            return i * 100
+        endif
+    endfor
+    return 0
+endfunction
+
+print stop_at(3)

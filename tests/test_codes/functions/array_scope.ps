@@ -1,0 +1,11 @@
+# An array declared in a function is local to the call, exactly like a scalar.
+shared[3] = [1, 2, 3]
+
+function makes_local()
+    shared[2] = [7, 8]
+    shared[0] = 99
+    return shared[0]
+endfunction
+
+print makes_local()
+print shared[0]

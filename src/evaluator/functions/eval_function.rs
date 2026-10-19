@@ -10,11 +10,10 @@ pub trait EvalFunction {
 
 impl EvalFunction for Evaluator {
     fn eval_function(&mut self, statement: &Statement) -> Result<(), PseudoError> {
-        if let Statement::Function(name, params, fstatements, ret_ment) = statement {
+        if let Statement::Function(name, params, fstatements) = statement {
             let func_args = FuncArgs {
                 params: params.clone(),
                 statements: fstatements.clone(),
-                ret_ment: ret_ment.clone(),
             };
             self.function_args.insert(name.clone(), func_args);
         }

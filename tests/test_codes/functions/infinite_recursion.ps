@@ -1,0 +1,6 @@
+# No base case: this must report an error rather than overflow the stack.
+function forever(n)
+    return forever(n + 1)
+endfunction
+
+print forever(1)

@@ -22,7 +22,7 @@ impl EvalExpression for Evaluator {
             Expr::Float(num) => Ok(EvalResult::Double(*num)),
             Expr::Str(value) => Ok(EvalResult::Str(value.clone())),
             Expr::Variable(var) => {
-                if let Some(value) = self.symbol_table.get(var) {
+                if let Some(value) = self.get_var(var) {
                     Ok(value.clone())
                 } else {
                     return Err(PseudoError::VariableError(format!(
@@ -47,7 +47,7 @@ impl EvalExpression for Evaluator {
             Expr::Comparison(left, op, right) => self.evaluate_comparison(left, op, right),
             Expr::MultiCondition(left, op, right ) => self.evaluate_multi_condition(left, op, right),
             Expr::ArrayVariable(var, index) => {
-                if let Some(array) = self.array_table.get(var).cloned() {
+                if let Some(array) = self.get_array(var).cloned() {
                     let index = match self.evaluate_expr(&index)? {
                         EvalResult::Number(val) => val as usize,
                         _ => {

@@ -1,15 +1,15 @@
 use crate::{
     constants::error_handler::PseudoError,
-    evaluator::{eval_result::Operation, Expr},
+    evaluator::{eval_result::Operation, flow::Flow, Expr},
 };
 
 use super::super::{EvalExpression, EvalStatement, Evaluator, Statement};
 pub trait EvalFor {
-    fn eval_for(&mut self, statement: &Statement) -> Result<(), PseudoError>;
+    fn eval_for(&mut self, statement: &Statement) -> Result<Flow, PseudoError>;
 }
 
 impl EvalFor for Evaluator {
-    fn eval_for(&mut self, statement: &Statement) -> Result<(), PseudoError> {
+    fn eval_for(&mut self, statement: &Statement) -> Result<Flow, PseudoError> {
         if let Statement::For(var, start, end, step, fstatement) = statement {
             let var = match var {
                 Expr::Variable(val) => val.clone(),
@@ -22,31 +22,37 @@ impl EvalFor for Evaluator {
             let start = match start {
                 Some(start) => self.evaluate_expr(start)?,
                 None => self
-                    .symbol_table
-                    .get(&var)
-                    .expect("Variable not found")
+                    .get_var(&var)
+                    .ok_or_else(|| {
+                        PseudoError::VariableError(format!("undefined variable: {}", var))
+                    })?
                     .clone(),
             };
             let end = self.evaluate_expr(end)?;
             let step = self.evaluate_expr(step)?;
-            self.symbol_table.insert(var.clone(), start);
-            while let Some(value) = self.symbol_table.get(&var) {
-                if value != &end {
-                    for statement in fstatement.iter() {
-                        self.evaluate_statement(statement, false)?;
+            self.set_var(var.clone(), start);
+            while let Some(value) = self.get_var(&var).cloned() {
+                if value != end {
+                    if let Flow::Return(value) = self.evaluate_block(fstatement)? {
+                        return Ok(Flow::Return(value));
                     }
-                    let value = self.symbol_table.get(&var).unwrap();
+                    let value = self
+                        .get_var(&var)
+                        .ok_or_else(|| {
+                            PseudoError::VariableError(format!("undefined variable: {}", var))
+                        })?
+                        .clone();
                     let value = value.add(&step)?;
 
-                    self.symbol_table.insert(var.clone(), value);
+                    self.set_var(var.clone(), value);
                 } else {
-                    for statement in fstatement.iter() {
-                        self.evaluate_statement(statement, false)?;
+                    if let Flow::Return(value) = self.evaluate_block(fstatement)? {
+                        return Ok(Flow::Return(value));
                     }
                     break;
                 }
             }
         }
-        Ok(())
+        Ok(Flow::Normal)
     }
 }

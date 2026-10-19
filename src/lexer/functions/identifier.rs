@@ -27,10 +27,14 @@ impl<'a> Identifier for Lexer<'a> {
                         }
                     }
                 }
-                ']' | '\t' | '\n' => {
+                ']' | '\t' => {
                     self.next_char();
                     break;
                 }
+                // Leave the newline for `tokenize` to turn into an `EOL`.
+                // Eating it here would make `return` on its own line
+                // indistinguishable from `return <next line's expression>`.
+                '\n' => break,
                 _ => break,
             }
         }

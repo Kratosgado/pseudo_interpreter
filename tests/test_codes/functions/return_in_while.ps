@@ -1,0 +1,14 @@
+# Return from inside a while loop exits the whole call immediately.
+function first_over(limit)
+    i = 0
+    while i < 100 do
+        if i > limit then
+            return i
+        endif
+        i = i + 1
+    endwhile
+    return 0 - 1
+endfunction
+
+print first_over(4)
+print first_over(500)

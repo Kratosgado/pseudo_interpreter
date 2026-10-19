@@ -1,0 +1,13 @@
+# A bare `return` must not swallow the statement on the next line.
+function log_it(x)
+    print "unreachable"
+    return 42
+endfunction
+
+function f(x)
+    print "start"
+    return
+    log_it(1)
+endfunction
+
+print f(1)

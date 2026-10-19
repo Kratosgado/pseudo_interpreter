@@ -1,5 +1,8 @@
 mod eval_result;
 pub mod evaluator;
+pub mod flow;
+pub mod output;
+pub mod scope;
 mod functions {
     pub mod arithmetics;
     pub mod comparison;
@@ -17,6 +20,9 @@ mod functions {
 
 pub use eval_result::EvalResult;
 pub use evaluator::Evaluator;
+pub use flow::Flow;
+pub use output::SharedBuffer;
+pub use scope::Scope;
 
 pub use super::lexer::enums::{expr::Expr, operator::Operator, statement::Statement};
 pub use functions::{

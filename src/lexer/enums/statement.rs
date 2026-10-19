@@ -21,7 +21,9 @@ pub enum Statement {
     Break,
     For(Expr, Option<Expr>, Expr, Expr, Box<Vec<Statement>>),
 
-    Function(String, Vec<Expr>, Box<Vec<Statement>>, Option<Expr>),
+    Function(String, Vec<Expr>, Box<Vec<Statement>>),
+    /// `Return` with an optional value. Valid anywhere inside a function body.
+    Return(Option<Expr>),
 }
 
 #[derive(Debug, Clone)]

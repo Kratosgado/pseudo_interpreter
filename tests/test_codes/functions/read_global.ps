@@ -1,0 +1,9 @@
+# A global that the function does not shadow stays readable inside it.
+offset = 10
+
+function bump(x)
+    return x + offset
+endfunction
+
+print bump(5)
+print offset

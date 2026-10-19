@@ -1,0 +1,10 @@
+function fact(n)
+    if n < 2 then
+        return 1
+    endif
+    return n * fact(n - 1)
+endfunction
+
+print fact(5)
+print fact(1)
+print fact(0)
