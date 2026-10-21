@@ -15,19 +15,19 @@ impl ParseDeclare for Parser {
             if let Some(Token::As) = self.current_token {
                 self.next_token();
             }else {
-                return Err(PseudoError::keyword(vec![Token::As], &self.current_token.as_ref().unwrap()));
+                return Err(PseudoError::keyword(vec![Token::As], &self.current_token.as_ref().unwrap(), self.line));
             }
             let datatype = match self.current_token {
                 Some(Token::Integer) => "int",
                 Some(Token::String) => "str",
                 Some(Token::Bool) => "bool",
                 Some(Token::Double) =>"double",
-                _ =>return Err(PseudoError::keyword(vec![Token::Ident("type: {integer, string, bool, double}".to_string())], &self.current_token.as_ref().unwrap())),
+                _ =>return Err(PseudoError::keyword(vec![Token::Ident("type: {integer, string, bool, double}".to_string())], &self.current_token.as_ref().unwrap(), self.line)),
             };
             self.next_token();
             Ok(Statement::Declare(var, datatype.to_string()))
         } else {
-            return Err(PseudoError::keyword(vec![Token::Ident("identifier".to_string())], &self.current_token.as_ref().unwrap()));
+            return Err(PseudoError::keyword(vec![Token::Ident("identifier".to_string())], &self.current_token.as_ref().unwrap(), self.line));
         }
     }
 }

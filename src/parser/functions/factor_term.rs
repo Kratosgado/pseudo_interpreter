@@ -78,6 +78,7 @@ impl ParseFactorTerm for Parser {
                     return Err(PseudoError::keyword(
                         vec![Token::RParen],
                         &self.current_token.as_ref().unwrap(),
+                        self.line,
                     ));
                 }
             }
@@ -101,6 +102,7 @@ impl ParseFactorTerm for Parser {
                             return Err(PseudoError::keyword(
                                 vec![Token::RParen],
                                 &self.current_token.as_ref().unwrap(),
+                                self.line,
                             ));
                         }
                     }

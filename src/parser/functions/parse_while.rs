@@ -19,7 +19,7 @@ impl ParseWhile for Parser {
             let wstatement = self.parse_token(vec![Token::EndWhile])?;
             Ok(Statement::While(condition, Box::new(wstatement)))
         } else {
-            return  Err(PseudoError::keyword(vec![Token::Do], &self.current_token.as_ref().unwrap()));
+            return  Err(PseudoError::keyword(vec![Token::Do], &self.current_token.as_ref().unwrap(), self.line));
         }
     }
 }

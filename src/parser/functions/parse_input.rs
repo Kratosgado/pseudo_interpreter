@@ -15,7 +15,7 @@ impl ParseInput for Parser {
                 self.next_token();
                 Ok(Statement::Input(var))
             }
-            _ => return Err(PseudoError::keyword(vec![Token::Ident("identifier".to_string())], &self.current_token.as_ref().unwrap())),
+            _ => return Err(PseudoError::keyword(vec![Token::Ident("identifier".to_string())], &self.current_token.as_ref().unwrap(), self.line)),
         }
      
     }

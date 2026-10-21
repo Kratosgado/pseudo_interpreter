@@ -37,10 +37,10 @@ impl ParseFunction for Parser {
                 let fstatements = self.parse_token(vec![Token::EndFunction])?;
                 Ok(Statement::Function(name.clone(), params, Box::new(fstatements)))
             } else {
-                return Err(PseudoError::keyword(vec![Token::LParen], &self.current_token.as_ref().unwrap()));
+                return Err(PseudoError::keyword(vec![Token::LParen], &self.current_token.as_ref().unwrap(), self.line));
             }
         } else {
-            return Err(PseudoError::keyword(vec![Token::Ident("function name".to_string())], &self.current_token.as_ref().unwrap()));
+            return Err(PseudoError::keyword(vec![Token::Ident("function name".to_string())], &self.current_token.as_ref().unwrap(), self.line));
         }
     }
 

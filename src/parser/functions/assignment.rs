@@ -25,7 +25,7 @@ impl ParseAssignment for Parser {
                     Ok(Statement::Expr(Expr::FunctionCall(var, Box::new(args))))
                 }
                  else {
-                    return Err(PseudoError::keyword(vec![Token::Assign], &self.current_token.as_ref().unwrap()));
+                    return Err(PseudoError::keyword(vec![Token::Assign], &self.current_token.as_ref().unwrap(), self.line));
                 }
             }
             _ => todo!("Implement for other types of assignments"),

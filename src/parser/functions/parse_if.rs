@@ -62,6 +62,7 @@ impl ParseIf for Parser {
             return Err(PseudoError::keyword(
                 vec![Token::Then],
                 &self.current_token.as_ref().unwrap(),
+                self.line,
             ));
         }
     }

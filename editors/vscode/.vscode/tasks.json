@@ -1,0 +1,34 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "npm run compile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["build-lsp-dev"],
+            "presentation": { "reveal": "silent" },
+            "problemMatcher": ["$tsc"]
+        },
+        {
+            "label": "build-lsp-dev",
+            "type": "shell",
+            "command": "node scripts/copy-lsp.js",
+            "group": "build",
+            "presentation": { "reveal": "silent" },
+            "problemMatcher": []
+        },
+        {
+            "label": "watch",
+            "type": "shell",
+            "command": "npm run watch",
+            "group": "build",
+            "isBackground": true,
+            "presentation": { "reveal": "silent" },
+            "problemMatcher": "$tsc-watch"
+        }
+    ]
+}

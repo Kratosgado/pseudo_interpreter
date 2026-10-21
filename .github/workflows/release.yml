@@ -1,0 +1,126 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version tag (e.g. v1.0.0)"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  TAG: ${{ github.ref_name || inputs.tag }}
+
+jobs:
+  # ── 1. Build LSP binary for every platform ───────────────────────────────
+  build-lsp:
+    name: Build LSP (${{ matrix.asset }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            runner: ubuntu-latest
+            asset: pseudo_lsp-linux-x64
+          - target: aarch64-apple-darwin
+            runner: macos-latest
+            asset: pseudo_lsp-darwin-arm64
+          - target: x86_64-apple-darwin
+            runner: macos-13
+            asset: pseudo_lsp-darwin-x64
+          - target: x86_64-pc-windows-msvc
+            runner: windows-latest
+            asset: pseudo_lsp-windows-x64.exe
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install musl linker (Linux only)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: sudo apt-get install -y musl-tools
+
+      - name: Build
+        run: cargo build --release -p pseudo_lsp --target ${{ matrix.target }}
+        env:
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
+
+      - name: Rename artifact (Unix)
+        if: runner.os != 'Windows'
+        run: cp target/${{ matrix.target }}/release/pseudo_lsp ${{ matrix.asset }}
+
+      - name: Rename artifact (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Copy-Item target/${{ matrix.target }}/release/pseudo_lsp.exe ${{ matrix.asset }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: ${{ matrix.asset }}
+
+  # ── 2. Create GitHub Release and attach all binaries ─────────────────────
+  create-release:
+    name: Create GitHub Release
+    needs: build-lsp
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: artifacts/
+
+      - name: List artifacts
+        run: ls -lh artifacts/
+
+      - name: Create release
+        run: |
+          gh release create "${{ env.TAG }}" artifacts/* \
+            --title "${{ env.TAG }}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── 3. Publish VSCode extension (after release exists so download works) ──
+  publish-vscode:
+    name: Publish to VS Code Marketplace
+    needs: create-release
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: editors/vscode
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Set extension version from tag
+        run: npm version "${TAG#v}" --no-git-tag-version
+        env:
+          TAG: ${{ env.TAG }}
+
+      - name: Bundle and package
+        run: npm run vscode:prepublish && npx @vscode/vsce package --no-dependencies
+
+      - name: Publish to Marketplace
+        run: npx @vscode/vsce publish --no-dependencies --pat "${{ secrets.VSCE_PAT }}"
+
+      - name: Upload VSIX to release
+        run: gh release upload "${{ env.TAG }}" *.vsix
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,7 @@
+src/
+tsconfig.json
+.vscode/
+scripts/
+node_modules/
+bin/
+.eslintrc.json

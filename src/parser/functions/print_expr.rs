@@ -13,7 +13,7 @@ impl ParsePrintExpr for Parser {
             Some(Token::Ident(_)) => Ok(Statement::Print(self.parse_expr()?)),
             Some(Token::Array(_, _)) => Ok(Statement::Print(self.parse_expr()?)),
             Some(Token::Number(_) | Token::Str(_) | Token::Boolean(_) )=> Ok(Statement::Print(self.parse_expr()?)),
-            _ => return Err(PseudoError::keyword(vec![Token::Ident("expression".to_string())], &self.current_token.as_ref().unwrap())),
+            _ => return Err(PseudoError::keyword(vec![Token::Ident("expression".to_string())], &self.current_token.as_ref().unwrap(), self.line)),
         }
     }
 

@@ -36,10 +36,10 @@ impl ParseFor for Parser {
                 self.next_token();
                  fstatement.extend(self.parse_token(vec![Token::EndFor])?);
             } else {
-                return Err(PseudoError::keyword(vec![Token::Do], &self.current_token.as_ref().unwrap()));            };
+                return Err(PseudoError::keyword(vec![Token::Do], &self.current_token.as_ref().unwrap(), self.line));            };
             Ok(Statement::For(var, start, end, step, Box::new(fstatement)))
         } else {
-            return Err(PseudoError::keyword(vec![Token::To], &self.current_token.as_ref().unwrap()));
+            return Err(PseudoError::keyword(vec![Token::To], &self.current_token.as_ref().unwrap(), self.line));
         }
     }
 }

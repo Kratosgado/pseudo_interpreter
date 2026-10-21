@@ -1,0 +1,105 @@
+{
+  "name": "pseudo-runner",
+  "displayName": "Pseudo Runner",
+  "description": "Pseudocode language support, IntelliSense and syntax highlighting",
+  "version": "2.0.0",
+  "publisher": "KratosGado",
+  "license": "MIT",
+  "author": {
+    "name": "Prince Mbeah Essilfie",
+    "email": "mbeahessilfieprince@gmail.com",
+    "url": "https://github.com/Kratosgado"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kratosgado/pseudo_interpreter"
+  },
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "keywords": ["pseudo", "pseudocode", "intellisense", "syntax", "highlighting"],
+  "categories": ["Programming Languages", "Snippets", "Education"],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "pseudo",
+        "extensions": [".ps", ".pseudo"],
+        "aliases": ["pseudocode", "pseudo"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "pseudo",
+        "scopeName": "text.ps",
+        "path": "./syntaxes/pseudo.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Pseudo LSP",
+      "properties": {
+        "pseudoLsp.serverPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Absolute path to the pseudo_lsp binary. Leave empty to use the auto-downloaded binary."
+        },
+        "pseudoLsp.trace.server": {
+          "type": "string",
+          "scope": "window",
+          "enum": ["off", "messages", "verbose"],
+          "default": "off",
+          "description": "Traces communication between VS Code and the pseudo language server."
+        }
+      }
+    },
+    "keybindings": {
+      "command": "pseudoRunner.runPseudo",
+      "title": "Run Pseudo Code",
+      "key": "f5",
+      "when": "editorLangId == pseudo"
+    },
+    "commands": [
+      {
+        "command": "pseudoRunner.runPseudo",
+        "title": "Run Pseudo Code",
+        "category": "Pseudo",
+        "icon": "$(play)"
+      },
+      {
+        "command": "pseudoRunner.installServer",
+        "title": "Install / Update Language Server",
+        "category": "Pseudo"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "editorLangId == pseudo",
+          "command": "pseudoRunner.runPseudo",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run bundle",
+    "bundle": "esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --platform=node --format=cjs --minify",
+    "compile": "tsc -p . --noEmit",
+    "build-lsp-dev": "node scripts/copy-lsp.js",
+    "watch": "tsc -p . -w --noEmit",
+    "package": "npx @vscode/vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.6",
+    "@types/vscode": "^1.87.0",
+    "esbuild": "^0.21.0",
+    "typescript": "^5.3.3"
+  }
+}

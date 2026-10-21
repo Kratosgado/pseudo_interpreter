@@ -2,12 +2,13 @@ use std::str::Chars;
 
 use crate::constants::error_handler::PseudoError;
 
-use super::{Operator,Identifier, Comparison, Datatype, Token};
+use super::{Operator, Identifier, Comparison, Datatype, Token};
 
 
 pub struct Lexer<'a> {
     chars: Chars<'a>,
     pub current_char: Option<char>,
+    pub line: usize,
 }
 
 impl<'a> Lexer<'a> {
@@ -15,8 +16,9 @@ impl<'a> Lexer<'a> {
         let mut lexer = Lexer {
             chars: input.chars(),
             current_char: None,
+            line: 1,
         };
-        lexer.next_char(); // Initialize the first character
+        lexer.next_char();
         lexer
     }
 
@@ -56,13 +58,21 @@ impl<'a> Lexer<'a> {
                     self.next_char();
                     tokens.push(Token::RBracket);
                 },
-                '\n' | ';' => {
+                '\n' => {
+                    tokens.push(Token::EOL);
+                    self.line += 1;
+                    self.next_char();
+                }
+                ';' => {
                     tokens.push(Token::EOL);
                     self.next_char();
                 }
                 ' ' | '\t' | '\r' => self.next_char(),
                 _ => {
-                    return Err(PseudoError::ParseError(format!("Invalid character: {}", ch)));
+                    return Err(PseudoError::ParseError {
+                        msg: format!("Invalid character: {}", ch),
+                        line: self.line,
+                    });
                 }
             }
         }

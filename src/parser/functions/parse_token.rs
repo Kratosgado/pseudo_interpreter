@@ -41,7 +41,7 @@ impl ParseToken for Parser {
                     self.next_token();
                     statements.push(Statement::Break);
                 }
-                _ => return Err(PseudoError::keyword(terminators, &token)),
+                _ => return Err(PseudoError::keyword(terminators, &token, self.line)),
             }
         }
         Ok(statements)
